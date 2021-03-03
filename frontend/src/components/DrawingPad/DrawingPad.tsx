@@ -1,6 +1,6 @@
 import { Flex } from '@chakra-ui/react';
 import React, { useEffect, useRef } from 'react';
-import { SketchField, Tools } from 'react-sketch';
+import CanvasDraw from 'react-canvas-draw';
 import './DrawingPad.scss';
 
 interface DrawingPadProps {
@@ -14,13 +14,13 @@ const DrawingPad = ({ socket }: DrawingPadProps) => {
 
   return (
     <Flex height='100%' width='100%'>
-      <SketchField
-        width='100%'
-        height='100%'
-        widthCorrection={0}
-        tool={Tools.Pencil}
-        lineColor='#3182CE'
-        lineWidth={3}
+      <CanvasDraw
+        canvasWidth={'auto'}
+        canvasHeight={'548px'}
+        brushRadius={3}
+        brushColor='blue'
+        catenaryColor={'#FFD500'}
+        gridColor={'rgba(0, 180, 216, 0.1)'}
       />
     </Flex>
   );

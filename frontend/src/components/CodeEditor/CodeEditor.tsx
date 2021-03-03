@@ -12,9 +12,7 @@ import {
 import { cloneDeep } from 'lodash';
 import axios from 'axios';
 import { FaPlay } from 'react-icons/fa';
-import 'ace-builds/src-min-noconflict/ext-searchbox';
-import 'ace-builds/src-min-noconflict/ext-language_tools';
-import 'ace-builds/src-noconflict/mode-jsx';
+// import 'ace-builds/src-min-noconflict/ext-language_tools';
 // import 'ace-builds/webpack-resolver';
 import { themes, languageDataWithKeys } from './editorData';
 import { judgeUrl } from '../../api/apiInfo';
@@ -22,13 +20,38 @@ import { delay } from '../../utils';
 import { Resizable } from 're-resizable';
 import { Ace } from 'ace-builds';
 
-Object.keys(languageDataWithKeys).forEach(key => {
-  const languageData = languageDataWithKeys[key];
-  const { mode } = languageData;
-  require(`ace-builds/src-noconflict/mode-${mode}`);
-  require(`ace-builds/src-noconflict/snippets/${mode}`);
-});
-themes.forEach(theme => require(`ace-builds/src-noconflict/theme-${theme}`));
+import 'ace-builds/src-noconflict/mode-c_cpp';
+import 'ace-builds/src-noconflict/mode-clojure';
+import 'ace-builds/src-noconflict/mode-csharp';
+import 'ace-builds/src-noconflict/mode-erlang';
+import 'ace-builds/src-noconflict/mode-golang';
+import 'ace-builds/src-noconflict/mode-java';
+import 'ace-builds/src-noconflict/mode-javascript';
+import 'ace-builds/src-noconflict/mode-kotlin';
+import 'ace-builds/src-noconflict/mode-php';
+import 'ace-builds/src-noconflict/mode-python';
+import 'ace-builds/src-noconflict/mode-ruby';
+import 'ace-builds/src-noconflict/mode-typescript';
+
+import 'ace-builds/src-noconflict/theme-monokai';
+import 'ace-builds/src-noconflict/theme-github';
+import 'ace-builds/src-noconflict/theme-tomorrow_night';
+import 'ace-builds/src-noconflict/theme-tomorrow';
+import 'ace-builds/src-noconflict/theme-kuroir';
+import 'ace-builds/src-noconflict/theme-twilight';
+import 'ace-builds/src-noconflict/theme-xcode';
+import 'ace-builds/src-noconflict/theme-textmate';
+import 'ace-builds/src-noconflict/theme-solarized_dark';
+import 'ace-builds/src-noconflict/theme-solarized_light';
+import 'ace-builds/src-noconflict/theme-terminal';
+
+// Object.keys(languageDataWithKeys).forEach(key => {
+//   const languageData = languageDataWithKeys[key];
+//   const { mode } = languageData;
+//   require(`ace-builds/src-noconflict/mode-${mode}`);
+//   require(`ace-builds/src-noconflict/snippets/${mode}`);
+// });
+// themes.forEach(theme => require(`ace-builds/src-noconflict/theme-${theme}`));
 
 interface CodeEditorProps {
   socket: SocketIOClient.Socket;
