@@ -1,5 +1,8 @@
 * Git push
 * github actions
+    - frontend
+    - backend
+* Fix join session, launch session
 * sync 
     - language change events
     - terminal output: user john ran the code just now
