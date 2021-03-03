@@ -1,4 +1,4 @@
-name: Code Collab CI
+name: Code Collab Frontend
 
 on: [push]
 

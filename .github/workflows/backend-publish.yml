@@ -1,4 +1,4 @@
-name: Deploy To Heroku
+name: Code Collab Backend
 
 on: [push]
 
@@ -12,17 +12,18 @@ jobs:
         with:
           node-version: 13.x
       - name: Install deps
-        working-directory: ./frontend
+        working-directory: ./backend
         run: npm i
       - name: Run lint
-        working-directory: ./frontend
+        working-directory: ./backend
         run: npm run lint
       - name: Run Build
-        working-directory: ./frontend
+        working-directory: ./backend
         run: npm run build
         env:
           CI: ''
       - name: Deploy to heroku
+        working-directory: ./backend
         uses: akhileshns/heroku-deploy@v3.12.12
         with:
           heroku_api_key: ${{secrets.HEROKU_API_TOKEN}}
