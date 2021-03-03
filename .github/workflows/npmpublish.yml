@@ -1,0 +1,36 @@
+name: Code Collab CI
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [12.x]
+    steps:
+      - uses: actions/checkout@v1
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Install dependencies
+        working-directory: ./frontend
+        run: npm install
+      - name: npm lint
+        working-directory: ./frontend
+        run: npm run lint
+      - name: npm test
+        working-directory: ./frontend
+        run: npm run test --passWithNoTests
+      - name: npm build
+        working-directory: ./frontend
+        run: npm run build
+        env:
+          CI: ''
+      - name: Build and Deploy
+        uses: JamesIves/github-pages-deploy-action@releases/v3
+        with:
+          ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+          BRANCH: gh-pages # The branch the action should deploy to.
+          FOLDER: frontend/build # The folder the action should deploy
