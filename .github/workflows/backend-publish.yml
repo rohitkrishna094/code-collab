@@ -29,6 +29,6 @@ jobs:
         uses: akhileshns/heroku-deploy@v3.12.12
         with:
           heroku_api_key: ${{secrets.HEROKU_API_TOKEN}}
-          heroku_app_name: 'code-collab'
+          heroku_app_name: 'code-collab-api'
           heroku_email: ${{secrets.HEROKU_EMAIL}}
           appdir: backend
