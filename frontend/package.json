@@ -2,6 +2,7 @@
     "name": "code-collab",
     "version": "0.1.0",
     "private": true,
+    "homepage": "http://rohitkrishna094.github.io/code-collab",
     "dependencies": {
         "@chakra-ui/icons": "^1.0.5",
         "@chakra-ui/react": "^1.3.3",
