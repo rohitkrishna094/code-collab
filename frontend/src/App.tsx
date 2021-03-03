@@ -1,6 +1,6 @@
 import { ChakraProvider, Flex } from '@chakra-ui/react';
 import React, { useEffect, useState } from 'react';
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import { HashRouter as Router, Switch, Route } from 'react-router-dom';
 import './App.css';
 import PlayGround from './components/playground/PlayGround';
 import Home from './components/Home/Home';
