@@ -31,6 +31,11 @@ const main = async () => {
   app.use(express.urlencoded({ extended: true }));
   app.use('/api/judge', judge);
 
+  app.get('/test', (req: Request, res: Response) => {
+    console.log('ping endpoint test');
+    res.status(200).json({ msg: 'ping success' });
+  });
+
   // For 404 pages
   app.use((_req: Request, res: Response) => {
     res.status(404).json({ status: '404' });
