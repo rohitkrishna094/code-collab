@@ -38,6 +38,7 @@ jobs:
         run: npm run build
         env:
           CI: ''
+          REACT_APP_BASE_URL: https://code-collab-api.herokuapp.com
       - name: Build and Deploy
         uses: JamesIves/github-pages-deploy-action@releases/v3
         with:
