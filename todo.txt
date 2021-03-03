@@ -1,0 +1,10 @@
+* Git push
+* github actions
+* sync 
+    - language change events
+    - terminal output: user john ran the code just now
+* cleanup code
+* add chat window
+* add sidebar/home logo button etc
+* add redis etc?
+* host judge api on your own(aws, digitalocean, vultr?)
