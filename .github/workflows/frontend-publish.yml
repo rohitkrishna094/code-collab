@@ -1,6 +1,11 @@
 name: Code Collab Frontend
 
-on: [push]
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - frontend/**
 
 jobs:
   build:
