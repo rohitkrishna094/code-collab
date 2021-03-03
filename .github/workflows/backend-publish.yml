@@ -25,8 +25,10 @@ jobs:
         run: npm run build
         env:
           CI: ''
+      - name: Remove yarn.lock
+        working-directory: ./backend
+        run: git rm yarn.lock
       - name: Deploy to heroku
-        run: cd backend && git rm yarn.lock
         uses: akhileshns/heroku-deploy@v3.12.12
         with:
           heroku_api_key: ${{secrets.HEROKU_API_TOKEN}}
