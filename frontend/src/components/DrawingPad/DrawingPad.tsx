@@ -15,12 +15,13 @@ const DrawingPad = ({ socket }: DrawingPadProps) => {
   return (
     <Flex height='100%' width='100%'>
       <CanvasDraw
-        canvasWidth={'auto'}
-        canvasHeight={'548px'}
+        canvasWidth='100%'
+        canvasHeight='100%'
         brushRadius={3}
-        brushColor='blue'
+        brushColor='#3182CE'
         catenaryColor={'#FFD500'}
         gridColor={'rgba(0, 180, 216, 0.1)'}
+        backgroundColor='#272822'
       />
     </Flex>
   );
