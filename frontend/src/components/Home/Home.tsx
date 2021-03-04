@@ -29,9 +29,13 @@ const LaunchButtonModal = () => {
     setLaunchButtonDisabled(!(name && name.length > 0));
   };
 
-  const onSessionLaunch = (e: any) => {
+  const redirect = () => {
     const id = v4();
     history.push(`${id}?user=${userName}`);
+  };
+
+  const onSessionLaunch = (e: any) => {
+    redirect();
   };
 
   return (
@@ -49,9 +53,15 @@ const LaunchButtonModal = () => {
               Enter your Name:
             </Text>
             <Input
+              autoFocus={true}
               value={userName}
               onChange={onChange}
               placeholder='Ada Lovelace'
+              onKeyDown={e => {
+                if (e.key === 'Enter' && !launchButtonDisabled) {
+                  redirect();
+                }
+              }}
             />
           </ModalBody>
 
@@ -95,8 +105,18 @@ const JoinButtonModal = () => {
     setJoinButtonDisabled(!isInputValid(userName, id));
   };
 
-  const onJoinLaunch = (e: any) => {
+  const redirect = () => {
     history.push(`${roomId}?user=${userName}`);
+  };
+
+  const onJoinLaunch = (e: any) => {
+    redirect();
+  };
+
+  const onKeyDown = e => {
+    if (e.key === 'Enter' && !joinButtonDisabled) {
+      redirect();
+    }
   };
 
   return (
@@ -117,6 +137,8 @@ const JoinButtonModal = () => {
               value={userName}
               onChange={onChange}
               placeholder='Ada Lovelace'
+              autoFocus={true}
+              onKeyDown={onKeyDown}
             />
             <Text mt={4} mb={4} fontSize='md'>
               Enter Room ID:
@@ -125,6 +147,7 @@ const JoinButtonModal = () => {
               value={roomId}
               onChange={onRoomIdChange}
               placeholder='xxxxxxxx-yyyy-zzzz-aaaa-bbbbbbbbbbbb'
+              onKeyDown={onKeyDown}
             />
           </ModalBody>
 
@@ -144,7 +167,7 @@ const JoinButtonModal = () => {
   );
 };
 
-const Home = () => {
+const Home = (props: any) => {
   return (
     <Flex
       height='100vh'

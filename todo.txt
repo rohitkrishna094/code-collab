@@ -1,4 +1,3 @@
-* Fix join session, launch session
 * sync 
     - draw output sync
 * cleanup code
@@ -8,8 +7,9 @@
     - make file/component sizes smaller
     - pull things into utils
     - pull things into actions
+
 * add chat window
-* add sidebar/home logo button etc
+* add sidebar/home etc
 * add redis etc?
 * host judge api on your own(aws, digitalocean, vultr?)
 
@@ -18,4 +18,3 @@ bugs
 ----
 * Fix overflow on terminal container
 * Fix eslint and prettier problem(very important, causing too much inconvenience)
-* modal on enter button not working, check chakra ui docs on Input tag

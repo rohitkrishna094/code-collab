@@ -1,20 +1,10 @@
 import { Flex, Button } from '@chakra-ui/react';
 import React, { useEffect, useRef } from 'react';
 import CanvasDraw from 'react-canvas-draw';
-import { socket } from '../../socket';
 import './DrawingPad.scss';
 
 const DrawingPad = () => {
   const canvasRef = useRef<any>(null);
-
-  useEffect(() => {
-    socket.on('draw_change', (data: any) => {
-      canvasRef?.current.loadSaveData(data);
-    });
-    return () => {
-      socket.off('draw_change');
-    };
-  }, []);
 
   const onClear = (e: any) => {
     canvasRef?.current.clear();
@@ -26,7 +16,16 @@ const DrawingPad = () => {
 
   const onChange = () => {
     const data = canvasRef?.current.getSaveData();
-    socket.emit('draw_change', data);
+  };
+
+  const onSave = () => {
+    const data = canvasRef?.current.getSaveData();
+    if (data) localStorage.setItem('drawing', data);
+  };
+
+  const onLoad = () => {
+    const data = localStorage.getItem('drawing');
+    if (data) canvasRef?.current.loadSaveData(data);
   };
 
   return (
@@ -38,6 +37,12 @@ const DrawingPad = () => {
         <Button ml={5} size='sm' colorScheme='green' onClick={onUndo}>
           Undo
         </Button>
+        <Button ml={5} size='sm' colorScheme='green' onClick={onSave}>
+          Save
+        </Button>
+        <Button ml={5} size='sm' colorScheme='green' onClick={onLoad}>
+          Load
+        </Button>
       </Flex>
       <CanvasDraw
         ref={canvasRef}
@@ -48,7 +53,6 @@ const DrawingPad = () => {
         catenaryColor={'#FFD500'}
         gridColor={'rgba(0, 180, 216, 0.1)'}
         backgroundColor='#272822'
-        immediateLoading={true}
         onChange={onChange}
       />
     </Flex>
