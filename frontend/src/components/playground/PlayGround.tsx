@@ -75,7 +75,7 @@ const PlayGround = () => {
         width='100%'
         display='flex'
         flexDirection='column'
-        defaultIndex={0}
+        defaultIndex={1}
         isLazy
       >
         <TabList>
@@ -109,7 +109,7 @@ const PlayGround = () => {
             <CodeEditor userName={name} />
           </TabPanel>
           <TabPanel padding={0} height='100%'>
-            <DrawingPad socket={socket} />
+            <DrawingPad />
             {/* <DrawingPadExcaliDraw /> */}
           </TabPanel>
         </TabPanels>

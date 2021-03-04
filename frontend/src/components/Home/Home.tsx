@@ -15,24 +15,18 @@ import {
 } from '@chakra-ui/react';
 import React, { useState } from 'react';
 import { useHistory } from 'react-router';
-import { v4 } from 'uuid';
+import { v4, validate } from 'uuid';
 
-const Home = () => {
+const LaunchButtonModal = () => {
   const history = useHistory();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [userName, setUserName] = useState('');
-  const [roomId, setRoomId] = useState('');
   const [launchButtonDisabled, setLaunchButtonDisabled] = useState(true);
 
   const onChange = (e: any) => {
     const name = e.target.value;
     setUserName(name);
-    if (name && name.length > 0) setLaunchButtonDisabled(false);
-    else setLaunchButtonDisabled(true);
-  };
-
-  const onRoomIdChange = (e: any) => {
-    setRoomId(e.target.value);
+    setLaunchButtonDisabled(!(name && name.length > 0));
   };
 
   const onSessionLaunch = (e: any) => {
@@ -41,15 +35,7 @@ const Home = () => {
   };
 
   return (
-    <Flex
-      height='100vh'
-      width='100vw'
-      alignItems='center'
-      justifyContent='center'
-      bg='#272822'
-      //   bg='#202020'
-      direction='column'
-    >
+    <>
       <Button colorScheme='blue' onClick={onOpen}>
         Launch Session
       </Button>
@@ -81,6 +67,40 @@ const Home = () => {
           </ModalFooter>
         </ModalContent>
       </Modal>
+    </>
+  );
+};
+
+const JoinButtonModal = () => {
+  const history = useHistory();
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const [userName, setUserName] = useState('');
+  const [roomId, setRoomId] = useState('');
+  const [joinButtonDisabled, setJoinButtonDisabled] = useState(true);
+
+  const isInputValid = (name: string, id: string) => {
+    // return name?.length > 0 && id?.length > 0 && validate(id);
+    return name?.length > 0 && id?.length > 0;
+  };
+
+  const onChange = (e: any) => {
+    const name = e.target.value;
+    setUserName(name);
+    setJoinButtonDisabled(!isInputValid(name, roomId));
+  };
+
+  const onRoomIdChange = (e: any) => {
+    const id = e.target.value;
+    setRoomId(id);
+    setJoinButtonDisabled(!isInputValid(userName, id));
+  };
+
+  const onJoinLaunch = (e: any) => {
+    history.push(`${roomId}?user=${userName}`);
+  };
+
+  return (
+    <>
       <Button colorScheme='green' onClick={onOpen} mt={6}>
         Join a Session
       </Button>
@@ -112,14 +132,30 @@ const Home = () => {
             <Button
               colorScheme='blue'
               mr={3}
-              onClick={onSessionLaunch}
-              disabled={launchButtonDisabled}
+              onClick={onJoinLaunch}
+              disabled={joinButtonDisabled}
             >
               Join
             </Button>
           </ModalFooter>
         </ModalContent>
       </Modal>
+    </>
+  );
+};
+
+const Home = () => {
+  return (
+    <Flex
+      height='100vh'
+      width='100vw'
+      alignItems='center'
+      justifyContent='center'
+      bg='#272822'
+      direction='column'
+    >
+      <LaunchButtonModal />
+      <JoinButtonModal />
     </Flex>
   );
 };

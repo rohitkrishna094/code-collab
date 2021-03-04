@@ -96,6 +96,11 @@ const main = async () => {
       socket.to(roomId).emit('code_run_result', data);
     });
 
+    socket.on('draw_change', (data: any) => {
+      console.log('draw_change');
+      socket.to(roomId).emit('draw_change', data);
+    });
+
     // socket.on('codeselectionchange', (range: any) => {
     //   console.log('range', range);
     //   socket.to(roomId).emit('codeselectionchange', range);

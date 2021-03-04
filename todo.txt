@@ -1,7 +1,5 @@
 * Fix join session, launch session
 * sync 
-    - language change events
-    - terminal output: user john ran the code just now
     - draw output sync
 * cleanup code
     - organize socket types
@@ -20,3 +18,4 @@ bugs
 ----
 * Fix overflow on terminal container
 * Fix eslint and prettier problem(very important, causing too much inconvenience)
+* modal on enter button not working, check chakra ui docs on Input tag

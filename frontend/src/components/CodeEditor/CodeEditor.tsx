@@ -382,12 +382,7 @@ const CodeEditor = ({ userName }: CodeEditorProps) => {
           bg='cornsilk'
           className='code-editor-comp'
         >
-          <Flex
-            color='white'
-            padding='10px'
-            className='code-header'
-            bg='#202020'
-          >
+          <Flex color='white' padding={2} className='code-header' bg='#202020'>
             <Button
               colorScheme='blue'
               size='sm'
