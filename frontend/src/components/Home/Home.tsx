@@ -113,7 +113,7 @@ const JoinButtonModal = () => {
     redirect();
   };
 
-  const onKeyDown = e => {
+  const onKeyDown = (e: any) => {
     if (e.key === 'Enter' && !joinButtonDisabled) {
       redirect();
     }
