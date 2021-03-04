@@ -13,17 +13,31 @@ import judge from './controller/judge/judge';
 const volleyball = require('volleyball');
 
 // socket io event types, S stands for socket io
-interface SLanguageChangeEventInput {
+interface SLanguageChangeEvent {
   id: number;
   mode: string;
   codeValue: string;
   userName: string;
 }
 
+interface SCodeRunEvent {
+  type: string;
+  payload: { userName: string; langId: number };
+}
+
+interface SCodeRunResultEvent {
+  type: string;
+  payload: { result: string };
+}
+
 const main = async () => {
   const app = express();
   const server = http.createServer(app);
-  const io = new Server(server, { cors: { origin: '*' } });
+  const io = new Server(server, {
+    cors: { origin: '*' },
+    pingTimeout: 60000,
+    pingInterval: 120000
+  });
 
   app.use(cors());
   app.use(volleyball);
@@ -67,10 +81,21 @@ const main = async () => {
       socket.to(roomId).emit('codechange', message);
     });
 
-    socket.on('language_change', (data: SLanguageChangeEventInput) => {
+    socket.on('language_change', (data: SLanguageChangeEvent) => {
       console.log('language_change', data.id, data.mode, data.userName);
       socket.to(roomId).emit('language_change', data);
     });
+
+    socket.on('code_run', (data: SCodeRunEvent) => {
+      console.log('code_run', data.payload);
+      socket.to(roomId).emit('code_run', data);
+    });
+
+    socket.on('code_run_result', (data: SCodeRunResultEvent) => {
+      console.log('code_run_result', data.payload);
+      socket.to(roomId).emit('code_run_result', data);
+    });
+
     // socket.on('codeselectionchange', (range: any) => {
     //   console.log('range', range);
     //   socket.to(roomId).emit('codeselectionchange', range);

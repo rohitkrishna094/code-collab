@@ -58,10 +58,7 @@ module.exports = {
         'max-len': [2, 180],
         'no-underscore-dangle': 'off',
         'no-console': 'off',
-        'react/jsx-filename-extension': [
-            2,
-            { extensions: ['.js', '.jsx', '.ts', '.tsx'] },
-        ],
+        'react/jsx-filename-extension': [2, { extensions: ['.js', '.jsx', '.ts', '.tsx'] }],
         'object-curly-newline': 'off',
         'arrow-body-style': 'off',
         'no-unused-vars': 'off',

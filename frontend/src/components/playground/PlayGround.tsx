@@ -13,7 +13,7 @@ import {
 import CodeEditor from '../CodeEditor/CodeEditor';
 import DrawingPad from '../DrawingPad/DrawingPad';
 import DrawingPadExcaliDraw from '../DrawingPadExcaliDraw/DrawingPadExcaliDraw';
-import io from 'socket.io-client';
+import { socket } from '../../socket/index';
 import { RiCodeSSlashLine, RiPencilFill } from 'react-icons/ri';
 import './PlayGround.scss';
 import { useParams } from 'react-router';
@@ -33,32 +33,37 @@ const PlayGround = () => {
   const query: any = useQuery();
   const name = query.get('user');
   const toast = useToast();
-  const socket = io.connect(baseUrl);
-
-  socket.on('userjoined', (userName: string) => {
-    console.log(userName, 'joined');
-    toast({
-      title: `${userName} joined`,
-      status: 'success',
-      isClosable: true,
-    });
-  });
-
-  socket.on('userleft', (userName: string) => {
-    console.log(userName, 'left');
-    toast({
-      title: `${userName} left`,
-      status: 'error',
-      isClosable: true,
-    });
-  });
 
   useEffect(() => {
+    socket.on('userjoined', (userName: string) => {
+      console.log(userName, 'joined');
+      toast({
+        title: `${userName} joined`,
+        status: 'success',
+        isClosable: true,
+      });
+    });
+
+    socket.on('userleft', (userName: string) => {
+      console.log(userName, 'left');
+      toast({
+        title: `${userName} left`,
+        status: 'error',
+        isClosable: true,
+      });
+    });
+
     const data = {
       room: roomId,
       name,
     };
     socket.emit('joinroom', data);
+
+    return () => {
+      socket.off('userjoined');
+      socket.off('userleft');
+      socket.off('joinroom');
+    };
   }, []);
 
   return (
@@ -101,7 +106,7 @@ const PlayGround = () => {
         </TabList>
         <TabPanels flex='1 1 auto'>
           <TabPanel padding={0} height='100%'>
-            <CodeEditor socket={socket} userName={name} />
+            <CodeEditor userName={name} />
           </TabPanel>
           <TabPanel padding={0} height='100%'>
             <DrawingPad socket={socket} />

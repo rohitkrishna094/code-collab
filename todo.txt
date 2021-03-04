@@ -1,13 +1,22 @@
-* Git push
-* github actions
-    - frontend
-    - backend
 * Fix join session, launch session
 * sync 
     - language change events
     - terminal output: user john ran the code just now
+    - draw output sync
 * cleanup code
+    - organize socket types
+    - organize dispatch types
+    - move hooks, usestate to proper places
+    - make file/component sizes smaller
+    - pull things into utils
+    - pull things into actions
 * add chat window
 * add sidebar/home logo button etc
 * add redis etc?
 * host judge api on your own(aws, digitalocean, vultr?)
+
+
+bugs
+----
+* Fix overflow on terminal container
+* Fix eslint and prettier problem(very important, causing too much inconvenience)

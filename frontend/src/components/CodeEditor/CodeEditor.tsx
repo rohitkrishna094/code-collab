@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useReducer, useRef, useState } from 'react';
 import AceEditor from 'react-ace';
 import {
   Box,
@@ -44,6 +44,7 @@ import 'ace-builds/src-noconflict/theme-textmate';
 import 'ace-builds/src-noconflict/theme-solarized_dark';
 import 'ace-builds/src-noconflict/theme-solarized_light';
 import 'ace-builds/src-noconflict/theme-terminal';
+import { socket } from '../../socket';
 
 // Object.keys(languageDataWithKeys).forEach(key => {
 //   const languageData = languageDataWithKeys[key];
@@ -54,16 +55,24 @@ import 'ace-builds/src-noconflict/theme-terminal';
 // themes.forEach(theme => require(`ace-builds/src-noconflict/theme-${theme}`));
 
 interface CodeEditorProps {
-  socket: SocketIOClient.Socket;
   userName: string;
 }
 
 // socket io event types, S stands for socket io
-interface SLanguageChangeEventInput {
+interface SLanguageChangeEvent {
   id: number;
   mode: string;
   codeValue: string;
   userName: string;
+}
+interface SCodeRunEvent {
+  type: string;
+  payload: { userName: string; langId: number };
+}
+
+interface SCodeRunResultEvent {
+  type: string;
+  payload: { result: string };
 }
 
 const getDefaultMode = (id: string) => {
@@ -73,7 +82,16 @@ const getDefaultMode = (id: string) => {
 
 const getDefaultLangId = () => 62;
 
-const CodeEditor = ({ socket, userName }: CodeEditorProps) => {
+const initialTerminalState = [
+  {
+    type: 'message',
+    payload: {
+      data: 'Environment is ready, just click run button and enjoy!',
+    },
+  },
+];
+
+const CodeEditor = ({ userName }: CodeEditorProps) => {
   const [mode, setMode] = useState('java');
   const [langId, setLangId] = useState(getDefaultLangId());
   const [codeValue, setCodeValue] = useState(getDefaultMode(langId + ''));
@@ -81,26 +99,80 @@ const CodeEditor = ({ socket, userName }: CodeEditorProps) => {
   const [isCompiling, setIsCompiling] = useState(false);
   const [isError, setIsError] = useState(false);
   const [codeError, setCodeError] = useState('');
-  const [stdoutOutput, setStdoutOutput] = useState<any>([
-    {
-      type: 'message',
-      payload: {
-        data: 'Environment is ready, just click run button and enjoy!',
-      },
-    },
-  ]);
+  // const [stdoutOutput, setStdoutOutput] = useState<any>(initialTerminalState);
   const editorRef = useRef<any>(null);
 
-  socket.on('codechange', (newValue: string) => {
-    setCodeValue(newValue);
-  });
+  const TerminalReducer = (state: any, action: any) => {
+    const { type, payload } = action;
+    const newState = cloneDeep(state);
+    if (type === 'message') {
+      const { data } = payload;
+      newState.push({ type: 'message', payload: { data } });
+      return newState;
+    } else if (type === 'coderun') {
+      const { userName: userWhoRan } = payload;
+      newState.push({
+        type: 'coderun',
+        payload: { userName: userWhoRan, langId },
+      });
+      return newState;
+    } else if (type === 'coderunresult') {
+      const { result } = payload;
+      newState.push({ type: 'coderunresult', payload: { result } });
+      return newState;
+    } else if (type === 'language_change') {
+      const { userName: userWhoChanged, language } = payload;
+      newState.push({
+        type: 'language_change',
+        payload: { userName: userWhoChanged, language },
+      });
+      return newState;
+    }
+    return state;
+  };
 
-  socket.on('language_change', (data: SLanguageChangeEventInput) => {
-    const { id, mode: newMode, codeValue: newCodeValue } = data;
-    setLangId(id);
-    setMode(newMode);
-    setCodeValue(newCodeValue);
-  });
+  const [stdoutOutput, dispatchStdoutOutput] = useReducer(
+    TerminalReducer,
+    initialTerminalState,
+  );
+
+  useEffect(() => {
+    socket.on('codechange', (newValue: string) => {
+      setCodeValue(newValue);
+    });
+
+    socket.on('code_run', (data: SCodeRunEvent) => {
+      dispatchStdoutOutput(data);
+    });
+
+    socket.on('language_change', (data: SLanguageChangeEvent) => {
+      const {
+        id,
+        mode: newMode,
+        codeValue: newCodeValue,
+        userName: userWhoChanged,
+      } = data;
+      const language = languageDataWithKeys[id]?.name;
+      setLangId(id);
+      setMode(newMode);
+      setCodeValue(newCodeValue);
+      dispatchStdoutOutput({
+        type: 'language_change',
+        payload: { userName: userWhoChanged, language },
+      });
+    });
+
+    socket.on('code_run_result', (data: SCodeRunResultEvent) => {
+      dispatchStdoutOutput(data);
+    });
+
+    // use effect cleanup
+    return () => {
+      socket.off('codechange');
+      socket.off('code_run');
+      socket.off('language_change');
+    };
+  }, []);
 
   // socket.on('codeselectionchange', (newRange: Ace.Range) => {
   //   if (editorRef && editorRef.current) {
@@ -124,6 +196,10 @@ const CodeEditor = ({ socket, userName }: CodeEditorProps) => {
     setLangId(+id);
     setMode(newMode);
     setCodeValue(newCodeValue);
+    dispatchStdoutOutput({
+      type: 'language_change',
+      payload: { userName, language: langData.name },
+    });
     socket.emit('language_change', {
       id,
       mode: newMode,
@@ -139,38 +215,33 @@ const CodeEditor = ({ socket, userName }: CodeEditorProps) => {
   // };
 
   const submitCode = async (id: number, sourceCode: string | undefined) => {
-    const response: any = await axios.request({
-      method: 'POST',
-      url: `${judgeUrl}/submissions`,
-      data: {
-        languageId: id,
-        sourceCode: sourceCode,
-      },
-    });
-    console.log('compile: ', response);
-    return response.data.token;
-  };
-
-  // todo pull axios stuff into another util file and convert to async await
-  const onRunClick = async () => {
-    const language = languageDataWithKeys[langId].name;
-
-    const deepClonedObject = cloneDeep(stdoutOutput);
-    deepClonedObject.push({ type: 'coderun', payload: { userName, langId } });
-    setStdoutOutput(deepClonedObject);
-
-    setIsCompiling(true);
-    let token;
     try {
-      token = await submitCode(langId, codeValue);
+      setIsCompiling(true);
+      const response: any = await axios.request({
+        method: 'POST',
+        url: `${judgeUrl}/submissions`,
+        data: {
+          languageId: id,
+          sourceCode: sourceCode,
+        },
+      });
+      console.log('compile: ', response);
+      return response.data.token;
     } catch (err) {
-      console.log(err);
+      console.log('Error while submitting', err);
       setIsCompiling(false);
       setCodeError(err);
       setIsError(true);
+    }
+  };
+
+  const queryResults = async (token: string | undefined) => {
+    if (!token) {
+      setIsCompiling(false);
+      setIsError(true);
       return;
     }
-    await delay(5000);
+
     await axios
       .request({
         method: 'GET',
@@ -181,19 +252,14 @@ const CodeEditor = ({ socket, userName }: CodeEditorProps) => {
         const { stderr, status, stdout, compile_output: compileOutput } = data;
         console.log('results', response);
         if (status && [1, 2, 3].includes(status.id)) {
-          console.log(stdout);
+          console.log('we got stdout', stdout);
           setIsCompiling(false);
-          deepClonedObject.push({
+          const codeResultAction = {
             type: 'coderunresult',
             payload: { result: stdout },
-          });
-          setStdoutOutput(deepClonedObject);
-          console.log(deepClonedObject);
-          // setStdoutOutput([
-          //   ...stdoutOutput,
-          //   userRanPrompt,
-          //   <Text key={Math.random()}>{stdout}</Text>,
-          // ]);
+          };
+          dispatchStdoutOutput(codeResultAction);
+          socket.emit('code_run_result', codeResultAction);
         } else if (compileOutput) {
           console.log(compileOutput);
           setIsCompiling(false);
@@ -215,6 +281,19 @@ const CodeEditor = ({ socket, userName }: CodeEditorProps) => {
         setIsError(true);
       });
   };
+
+  // todo pull axios stuff into another util file and convert to async await
+  const onRunClick = async () => {
+    const codeRunAction = { type: 'coderun', payload: { userName, langId } };
+    dispatchStdoutOutput(codeRunAction);
+    socket.emit('code_run', codeRunAction);
+
+    const token = await submitCode(langId, codeValue);
+
+    await delay(5000);
+    await queryResults(token);
+  };
+
   const Terminal = () => {
     return (
       <Flex
@@ -223,11 +302,11 @@ const CodeEditor = ({ socket, userName }: CodeEditorProps) => {
         width='30%'
         flex='1'
         bg='#272822'
-        padding={5}
         direction='column'
+        height='100%'
+        padding={5}
       >
         {stdoutOutput.map((item: any) => {
-          if (item.length === 3) console.log('object', item);
           const { type, payload } = item;
           if (type === 'message') {
             const { data } = payload;
@@ -252,6 +331,21 @@ const CodeEditor = ({ socket, userName }: CodeEditorProps) => {
           } else if (type === 'coderunresult') {
             const { result } = payload;
             return <Text key={Math.random()}>{result}</Text>;
+          } else if (type === 'language_change') {
+            const { userName: userWhoChanged, language } = payload;
+            return (
+              <Text key={Math.random()}>
+                User{' '}
+                <Text as='span' color='#3182CE'>
+                  {userWhoChanged}
+                </Text>{' '}
+                changed language to
+                <Text as='span' color='#38A169'>
+                  {' '}
+                  {language}
+                </Text>
+              </Text>
+            );
           }
           return null;
         })}
@@ -357,8 +451,8 @@ const CodeEditor = ({ socket, userName }: CodeEditorProps) => {
             </Select>
           </Flex>
           <AceEditor
-            mode='java'
-            theme='monokai'
+            mode={mode}
+            theme={theme}
             height='100%'
             width='100%'
             onChange={onChange}
