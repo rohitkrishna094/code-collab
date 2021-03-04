@@ -1,20 +1,20 @@
 {
   "files": {
     "main.css": "/code-collab/static/css/main.237b1056.chunk.css",
-    "main.js": "/code-collab/static/js/main.bdb7a2ac.chunk.js",
-    "main.js.map": "/code-collab/static/js/main.bdb7a2ac.chunk.js.map",
+    "main.js": "/code-collab/static/js/main.eb3660f2.chunk.js",
+    "main.js.map": "/code-collab/static/js/main.eb3660f2.chunk.js.map",
     "runtime-main.js": "/code-collab/static/js/runtime-main.efd9f1a3.js",
     "runtime-main.js.map": "/code-collab/static/js/runtime-main.efd9f1a3.js.map",
-    "static/js/2.1bfd5151.chunk.js": "/code-collab/static/js/2.1bfd5151.chunk.js",
-    "static/js/2.1bfd5151.chunk.js.map": "/code-collab/static/js/2.1bfd5151.chunk.js.map",
+    "static/js/2.188527b4.chunk.js": "/code-collab/static/js/2.188527b4.chunk.js",
+    "static/js/2.188527b4.chunk.js.map": "/code-collab/static/js/2.188527b4.chunk.js.map",
     "index.html": "/code-collab/index.html",
     "static/css/main.237b1056.chunk.css.map": "/code-collab/static/css/main.237b1056.chunk.css.map",
-    "static/js/2.1bfd5151.chunk.js.LICENSE.txt": "/code-collab/static/js/2.1bfd5151.chunk.js.LICENSE.txt"
+    "static/js/2.188527b4.chunk.js.LICENSE.txt": "/code-collab/static/js/2.188527b4.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
     "static/js/runtime-main.efd9f1a3.js",
-    "static/js/2.1bfd5151.chunk.js",
+    "static/js/2.188527b4.chunk.js",
     "static/css/main.237b1056.chunk.css",
-    "static/js/main.bdb7a2ac.chunk.js"
+    "static/js/main.eb3660f2.chunk.js"
   ]
 }
