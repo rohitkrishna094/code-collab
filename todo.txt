@@ -10,8 +10,8 @@
 * add sidebar/home etc
 * add redis etc?
 * host judge api on your own(aws, digitalocean, vultr?)
+* Use airbnb react eslint
 
 bugs
 ----
 * Fix overflow on terminal container
-* Fix eslint and prettier problem(very important, causing too much inconvenience)

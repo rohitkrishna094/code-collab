@@ -1,0 +1,3 @@
+[![Github Actions](https://github.com/rohitkrishna094/code-collab/actions/workflows/backend-publish.yml/badge.svg)](https://github.com/rohitkrishna094/code-collab/actions)  [![Github Actions](https://github.com/rohitkrishna094/code-collab/actions/workflows/frontend-publish.yml/badge.svg)](https://github.com/rohitkrishna094/code-collab/actions)  [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](https://github.com/rohitkrishna094/code-collab/blob/master/LICENSE)
+
+# Code-Collab
