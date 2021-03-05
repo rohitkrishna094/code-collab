@@ -78,7 +78,7 @@ const PlayGround = (props: any) => {
         alignItems='center'
         padding={2}
       >
-        <Logo />
+        <Logo mr={3} />
         <CopyToClipboard
           // text={`${window.location.origin}/#/${roomId}`}
           text={roomId}
@@ -117,7 +117,7 @@ const PlayGround = (props: any) => {
           width='100%'
           display='flex'
           flexDirection='column'
-          defaultIndex={1}
+          defaultIndex={0}
           isLazy
         >
           <TabList>

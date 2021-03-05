@@ -3,23 +3,25 @@ import { Flex, Text } from '@chakra-ui/react';
 import React from 'react';
 import { useHistory } from 'react-router';
 
-const Logo = () => {
+const Logo = (props: any) => {
   const history = useHistory();
+  let { fontSize } = props;
 
   const items = [
-    { value: 'Code', color: '#38A169', fontSize: '2xl' },
+    { value: 'Code', color: '#38A169', fs: '2xl' },
     { value: 'Collab', color: '#3182CE', fontSize: '2xl' },
   ];
   return (
     <Flex
       cursor='pointer'
-      mr={3}
       onClick={(e: any) => {
         history.push('/');
       }}
+      {...props}
     >
       {items.map(item => {
-        const { value, color, fontSize } = item;
+        const { value, color, fs } = item;
+        fontSize = fontSize || fs;
         return (
           <Text key={Math.random()} as='span' color={color} fontSize={fontSize}>
             {value}

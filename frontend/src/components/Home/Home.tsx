@@ -1,6 +1,7 @@
 import {
   Button,
   Flex,
+  Heading,
   Input,
   Modal,
   ModalBody,
@@ -13,20 +14,22 @@ import {
   Text,
   useDisclosure,
 } from '@chakra-ui/react';
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useHistory } from 'react-router';
+import Typist from 'react-typist';
 import { v4, validate } from 'uuid';
+import Logo from '../Logo/Logo';
 
-const LaunchButtonModal = () => {
+const CreateButtonModal = (props: any) => {
   const history = useHistory();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [userName, setUserName] = useState('');
-  const [launchButtonDisabled, setLaunchButtonDisabled] = useState(true);
+  const [createButtonDisabled, setCreateButtonDisabled] = useState(true);
 
   const onChange = (e: any) => {
     const name = e.target.value;
     setUserName(name);
-    setLaunchButtonDisabled(!(name && name.length > 0));
+    setCreateButtonDisabled(!(name && name.length > 0));
   };
 
   const redirect = () => {
@@ -34,19 +37,19 @@ const LaunchButtonModal = () => {
     history.push(`${id}?user=${userName}`);
   };
 
-  const onSessionLaunch = (e: any) => {
+  const onCreateClick = (e: any) => {
     redirect();
   };
 
   return (
-    <>
+    <Flex {...props}>
       <Button colorScheme='blue' onClick={onOpen}>
-        Launch Session
+        Create a Room
       </Button>
       <Modal isOpen={isOpen} onClose={onClose} isCentered>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Launch a Collaborative Session</ModalHeader>
+          <ModalHeader>Create a Room</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
             <Text mb={4} fontSize='md'>
@@ -58,7 +61,7 @@ const LaunchButtonModal = () => {
               onChange={onChange}
               placeholder='Ada Lovelace'
               onKeyDown={e => {
-                if (e.key === 'Enter' && !launchButtonDisabled) {
+                if (e.key === 'Enter' && !createButtonDisabled) {
                   redirect();
                 }
               }}
@@ -69,19 +72,19 @@ const LaunchButtonModal = () => {
             <Button
               colorScheme='blue'
               mr={3}
-              onClick={onSessionLaunch}
-              disabled={launchButtonDisabled}
+              onClick={onCreateClick}
+              disabled={createButtonDisabled}
             >
-              Launch
+              Create
             </Button>
           </ModalFooter>
         </ModalContent>
       </Modal>
-    </>
+    </Flex>
   );
 };
 
-const JoinButtonModal = () => {
+const JoinButtonModal = (props: any) => {
   const history = useHistory();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [userName, setUserName] = useState('');
@@ -109,7 +112,7 @@ const JoinButtonModal = () => {
     history.push(`${roomId}?user=${userName}`);
   };
 
-  const onJoinLaunch = (e: any) => {
+  const onJoinClick = (e: any) => {
     redirect();
   };
 
@@ -120,8 +123,8 @@ const JoinButtonModal = () => {
   };
 
   return (
-    <>
-      <Button colorScheme='green' onClick={onOpen} mt={6}>
+    <Flex {...props}>
+      <Button colorScheme='green' onClick={onOpen}>
         Join a Session
       </Button>
       <Modal isOpen={isOpen} onClose={onClose} isCentered>
@@ -155,7 +158,7 @@ const JoinButtonModal = () => {
             <Button
               colorScheme='blue'
               mr={3}
-              onClick={onJoinLaunch}
+              onClick={onJoinClick}
               disabled={joinButtonDisabled}
             >
               Join
@@ -163,22 +166,84 @@ const JoinButtonModal = () => {
           </ModalFooter>
         </ModalContent>
       </Modal>
-    </>
+    </Flex>
   );
 };
 
 const Home = (props: any) => {
   return (
+    // <Flex
+    //   height='100vh'
+    //   width='100vw'
+    //   alignItems='center'
+    //   justifyContent='center'
+    //   bg='#272822'
+    //   direction='column'
+    // >
+    //   <LaunchButtonModal />
+    //   <JoinButtonModal />
+    // </Flex>
     <Flex
-      height='100vh'
-      width='100vw'
       alignItems='center'
-      justifyContent='center'
-      bg='#272822'
-      direction='column'
+      justifyContent='space-evenly'
+      padding={200}
+      bg='#202020'
+      // bg='red'
+      color='white'
     >
-      <LaunchButtonModal />
-      <JoinButtonModal />
+      <Flex
+        direction='column'
+        width='50%'
+        alignItems='center'
+        justifyContent='center'
+        padding={10}
+        // bg='blue'
+      >
+        <Heading
+          fontSize={['32px', '48px', '48px']}
+          h={['100px', 'auto']}
+          textAlign='center'
+          mb={5}
+        >
+          <Typist
+            cursor={{ hideWhenDone: true, hideWhenDoneDelay: 1000 }}
+            avgTypingDelay={100}
+          >
+            <span style={{ fontSize: '32px', color: '#38A169' }}>
+              Collaboration Made Easy!
+            </span>
+            <Typist.Delay ms={1000} />
+            <Typist.Backspace count={24} />
+            <span style={{ color: '#38A169' }}>Code</span>
+            <span style={{ color: '#3182CE' }}>Collab</span>
+          </Typist>
+        </Heading>
+        <Flex
+          alignItems='center'
+          justifyContent='center'
+          // backgroundColor='rgba(0,0,0,0.7)'
+          // borderRadius='10px'
+          width='70%'
+          padding={5}
+          mb={5}
+        >
+          <Text textAlign='center'>
+            Create a room or join an existing room. Invite your friends and have
+            fun pair programming using live code editor and live drawing canvas.
+          </Text>
+        </Flex>
+        <Flex
+          direction='row'
+          mt={5}
+          mb={5}
+          alignItems='center'
+          justifyContent='space-around'
+        >
+          <CreateButtonModal mr={10} />
+          <JoinButtonModal />
+        </Flex>
+      </Flex>
+      <Flex className='animation'>animation goes here</Flex>
     </Flex>
   );
 };
