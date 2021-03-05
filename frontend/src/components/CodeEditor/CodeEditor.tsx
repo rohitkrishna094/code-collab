@@ -12,8 +12,8 @@ import {
 import { cloneDeep } from 'lodash';
 import axios from 'axios';
 import { FaPlay } from 'react-icons/fa';
-// import 'ace-builds/src-min-noconflict/ext-language_tools';
-// import 'ace-builds/webpack-resolver';
+import 'ace-builds/src-min-noconflict/ext-language_tools';
+import 'ace-builds/webpack-resolver';
 import { themes, languageDataWithKeys } from './editorData';
 import { judgeUrl } from '../../api/apiInfo';
 import { delay } from '../../utils';
@@ -44,7 +44,13 @@ import 'ace-builds/src-noconflict/theme-textmate';
 import 'ace-builds/src-noconflict/theme-solarized_dark';
 import 'ace-builds/src-noconflict/theme-solarized_light';
 import 'ace-builds/src-noconflict/theme-terminal';
-import { socket } from '../../socket';
+import {
+  CODE_CHANGE,
+  CODE_RUN,
+  CODE_RUN_RESULT,
+  LANGUAGE_CHANGE,
+  socket,
+} from '../../socket';
 
 // Object.keys(languageDataWithKeys).forEach(key => {
 //   const languageData = languageDataWithKeys[key];
@@ -75,6 +81,14 @@ interface SCodeRunResultEvent {
   payload: { result: string };
 }
 
+// dispatch consts A stands for Action Type
+enum STDOUT_TYPES {
+  A_LANGUAGE_CHANGE,
+  A_MESSAGE,
+  A_CODE_RUN_RESULT,
+  A_CODE_RUN,
+}
+
 const getDefaultMode = (id: string) => {
   const data = languageDataWithKeys[id];
   if (data && data.defaultValue) return data.defaultValue;
@@ -84,7 +98,7 @@ const getDefaultLangId = () => 62;
 
 const initialTerminalState = [
   {
-    type: 'message',
+    type: STDOUT_TYPES.A_MESSAGE,
     payload: {
       data: 'Environment is ready, just click run button and enjoy!',
     },
@@ -105,25 +119,28 @@ const CodeEditor = ({ userName }: CodeEditorProps) => {
   const TerminalReducer = (state: any, action: any) => {
     const { type, payload } = action;
     const newState = cloneDeep(state);
-    if (type === 'message') {
+    if (type === STDOUT_TYPES.A_MESSAGE) {
       const { data } = payload;
-      newState.push({ type: 'message', payload: { data } });
+      newState.push({ type: STDOUT_TYPES.A_MESSAGE, payload: { data } });
       return newState;
-    } else if (type === 'coderun') {
+    } else if (type === STDOUT_TYPES.A_CODE_RUN) {
       const { userName: userWhoRan } = payload;
       newState.push({
-        type: 'coderun',
+        type: STDOUT_TYPES.A_CODE_RUN,
         payload: { userName: userWhoRan, langId },
       });
       return newState;
-    } else if (type === 'coderunresult') {
+    } else if (type === STDOUT_TYPES.A_CODE_RUN_RESULT) {
       const { result } = payload;
-      newState.push({ type: 'coderunresult', payload: { result } });
+      newState.push({
+        type: STDOUT_TYPES.A_CODE_RUN_RESULT,
+        payload: { result },
+      });
       return newState;
-    } else if (type === 'language_change') {
+    } else if (type === STDOUT_TYPES.A_LANGUAGE_CHANGE) {
       const { userName: userWhoChanged, language } = payload;
       newState.push({
-        type: 'language_change',
+        type: STDOUT_TYPES.A_LANGUAGE_CHANGE,
         payload: { userName: userWhoChanged, language },
       });
       return newState;
@@ -137,15 +154,15 @@ const CodeEditor = ({ userName }: CodeEditorProps) => {
   );
 
   useEffect(() => {
-    socket.on('codechange', (newValue: string) => {
+    socket.on(CODE_CHANGE, (newValue: string) => {
       setCodeValue(newValue);
     });
 
-    socket.on('code_run', (data: SCodeRunEvent) => {
+    socket.on(CODE_RUN, (data: SCodeRunEvent) => {
       dispatchStdoutOutput(data);
     });
 
-    socket.on('language_change', (data: SLanguageChangeEvent) => {
+    socket.on(LANGUAGE_CHANGE, (data: SLanguageChangeEvent) => {
       const {
         id,
         mode: newMode,
@@ -157,20 +174,20 @@ const CodeEditor = ({ userName }: CodeEditorProps) => {
       setMode(newMode);
       setCodeValue(newCodeValue);
       dispatchStdoutOutput({
-        type: 'language_change',
+        type: STDOUT_TYPES.A_LANGUAGE_CHANGE,
         payload: { userName: userWhoChanged, language },
       });
     });
 
-    socket.on('code_run_result', (data: SCodeRunResultEvent) => {
+    socket.on(CODE_RUN_RESULT, (data: SCodeRunResultEvent) => {
       dispatchStdoutOutput(data);
     });
 
     // use effect cleanup
     return () => {
-      socket.off('codechange');
-      socket.off('code_run');
-      socket.off('language_change');
+      socket.off(CODE_CHANGE);
+      socket.off(CODE_RUN);
+      socket.off(LANGUAGE_CHANGE);
     };
   }, []);
 
@@ -186,7 +203,7 @@ const CodeEditor = ({ userName }: CodeEditorProps) => {
 
   const onChange = (newValue: any) => {
     setCodeValue(newValue);
-    socket.emit('codechange', newValue);
+    socket.emit(CODE_CHANGE, newValue);
   };
 
   const onLanguageChange = (e: React.ChangeEvent<HTMLSelectElement>): void => {
@@ -197,10 +214,10 @@ const CodeEditor = ({ userName }: CodeEditorProps) => {
     setMode(newMode);
     setCodeValue(newCodeValue);
     dispatchStdoutOutput({
-      type: 'language_change',
+      type: STDOUT_TYPES.A_LANGUAGE_CHANGE,
       payload: { userName, language: langData.name },
     });
-    socket.emit('language_change', {
+    socket.emit(LANGUAGE_CHANGE, {
       id,
       mode: newMode,
       codeValue: newCodeValue,
@@ -255,11 +272,11 @@ const CodeEditor = ({ userName }: CodeEditorProps) => {
           console.log('we got stdout', stdout);
           setIsCompiling(false);
           const codeResultAction = {
-            type: 'coderunresult',
+            type: STDOUT_TYPES.A_CODE_RUN_RESULT,
             payload: { result: stdout },
           };
           dispatchStdoutOutput(codeResultAction);
-          socket.emit('code_run_result', codeResultAction);
+          socket.emit(CODE_RUN_RESULT, codeResultAction);
         } else if (compileOutput) {
           console.log(compileOutput);
           setIsCompiling(false);
@@ -284,9 +301,12 @@ const CodeEditor = ({ userName }: CodeEditorProps) => {
 
   // todo pull axios stuff into another util file and convert to async await
   const onRunClick = async () => {
-    const codeRunAction = { type: 'coderun', payload: { userName, langId } };
+    const codeRunAction = {
+      type: STDOUT_TYPES.A_CODE_RUN,
+      payload: { userName, langId },
+    };
     dispatchStdoutOutput(codeRunAction);
-    socket.emit('code_run', codeRunAction);
+    socket.emit(CODE_RUN, codeRunAction);
 
     const token = await submitCode(langId, codeValue);
 
@@ -308,10 +328,10 @@ const CodeEditor = ({ userName }: CodeEditorProps) => {
       >
         {stdoutOutput.map((item: any) => {
           const { type, payload } = item;
-          if (type === 'message') {
+          if (type === STDOUT_TYPES.A_MESSAGE) {
             const { data } = payload;
             return <Text key={Math.random()}>{data}</Text>;
-          } else if (type === 'coderun') {
+          } else if (type === STDOUT_TYPES.A_CODE_RUN) {
             const { userName: userWhoRan, langId: newLangId } = payload;
             const langName = languageDataWithKeys[newLangId]?.name;
             return (
@@ -328,10 +348,14 @@ const CodeEditor = ({ userName }: CodeEditorProps) => {
                 code just now.
               </Text>
             );
-          } else if (type === 'coderunresult') {
+          } else if (type === STDOUT_TYPES.A_CODE_RUN_RESULT) {
             const { result } = payload;
-            return <Text key={Math.random()}>{result}</Text>;
-          } else if (type === 'language_change') {
+            return (
+              <Text key={Math.random()} whiteSpace='pre'>
+                {result}
+              </Text>
+            );
+          } else if (type === STDOUT_TYPES.A_LANGUAGE_CHANGE) {
             const { userName: userWhoChanged, language } = payload;
             return (
               <Text key={Math.random()}>

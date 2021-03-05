@@ -1,18 +1,15 @@
 * sync 
     - draw output sync
 * cleanup code
-    - organize socket types
-    - organize dispatch types
     - move hooks, usestate to proper places
     - make file/component sizes smaller
     - pull things into utils
     - pull things into actions
-
+* deploy to netlify
 * add chat window
 * add sidebar/home etc
 * add redis etc?
 * host judge api on your own(aws, digitalocean, vultr?)
-
 
 bugs
 ----

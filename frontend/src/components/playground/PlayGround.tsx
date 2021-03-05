@@ -14,7 +14,7 @@ import {
 import CodeEditor from '../CodeEditor/CodeEditor';
 import DrawingPad from '../DrawingPad/DrawingPad';
 import DrawingPadExcaliDraw from '../DrawingPadExcaliDraw/DrawingPadExcaliDraw';
-import { socket } from '../../socket/index';
+import { socket, USER_JOIN, USER_LEFT } from '../../socket/index';
 import { RiCodeSSlashLine, RiPencilFill } from 'react-icons/ri';
 import './PlayGround.scss';
 import { useParams } from 'react-router';
@@ -38,7 +38,7 @@ const PlayGround = (props: any) => {
   const toast = useToast();
 
   useEffect(() => {
-    socket.on('userjoined', (userName: string) => {
+    socket.on(USER_JOIN, (userName: string) => {
       console.log(userName, 'joined');
       toast({
         title: `${userName} joined`,
@@ -47,7 +47,7 @@ const PlayGround = (props: any) => {
       });
     });
 
-    socket.on('userleft', (userName: string) => {
+    socket.on(USER_LEFT, (userName: string) => {
       console.log(userName, 'left');
       toast({
         title: `${userName} left`,
@@ -60,12 +60,11 @@ const PlayGround = (props: any) => {
       room: roomId,
       name,
     };
-    socket.emit('joinroom', data);
+    socket.emit(USER_JOIN, data);
 
     return () => {
-      socket.off('userjoined');
-      socket.off('userleft');
-      socket.off('joinroom');
+      socket.off(USER_JOIN);
+      socket.off(USER_LEFT);
     };
   }, []);
 
