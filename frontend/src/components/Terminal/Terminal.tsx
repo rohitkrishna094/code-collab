@@ -1,4 +1,4 @@
-import React, { useEffect, useReducer, useRef, useState } from 'react';
+import React from 'react';
 import { Flex, Text } from '@chakra-ui/react';
 import { STDOUT_TYPES } from '../../actionTypes';
 import { languageDataWithKeys } from '../CodeEditor/editorData';
