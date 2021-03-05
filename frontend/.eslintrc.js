@@ -54,8 +54,9 @@ module.exports = {
         // note you must disable the base rule as it can report incorrect errors
         'no-use-before-define': 'off',
         '@typescript-eslint/no-use-before-define': ['error'],
+        'max-len': [2, 80],
+        'implicit-arrow-linebreak': 'off',
         'prettier/prettier': 'error',
-        'max-len': [2, 180],
         'no-underscore-dangle': 'off',
         'no-console': 'off',
         'react/jsx-filename-extension': [

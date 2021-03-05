@@ -51,6 +51,8 @@ import {
   LANGUAGE_CHANGE,
   socket,
 } from '../../socket';
+import { STDOUT_TYPES } from '../../actionTypes';
+import Terminal from '../Terminal/Terminal';
 
 // Object.keys(languageDataWithKeys).forEach(key => {
 //   const languageData = languageDataWithKeys[key];
@@ -81,14 +83,6 @@ interface SCodeRunResultEvent {
   payload: { result: string };
 }
 
-// dispatch consts A stands for Action Type
-enum STDOUT_TYPES {
-  A_LANGUAGE_CHANGE,
-  A_MESSAGE,
-  A_CODE_RUN_RESULT,
-  A_CODE_RUN,
-}
-
 const getDefaultMode = (id: string) => {
   const data = languageDataWithKeys[id];
   if (data && data.defaultValue) return data.defaultValue;
@@ -113,7 +107,6 @@ const CodeEditor = ({ userName }: CodeEditorProps) => {
   const [isCompiling, setIsCompiling] = useState(false);
   const [isError, setIsError] = useState(false);
   const [codeError, setCodeError] = useState('');
-  // const [stdoutOutput, setStdoutOutput] = useState<any>(initialTerminalState);
   const editorRef = useRef<any>(null);
 
   const TerminalReducer = (state: any, action: any) => {
@@ -314,69 +307,6 @@ const CodeEditor = ({ userName }: CodeEditorProps) => {
     await queryResults(token);
   };
 
-  const Terminal = () => {
-    return (
-      <Flex
-        color='white'
-        minWidth='30%'
-        width='30%'
-        flex='1'
-        bg='#272822'
-        direction='column'
-        height='100%'
-        padding={5}
-      >
-        {stdoutOutput.map((item: any) => {
-          const { type, payload } = item;
-          if (type === STDOUT_TYPES.A_MESSAGE) {
-            const { data } = payload;
-            return <Text key={Math.random()}>{data}</Text>;
-          } else if (type === STDOUT_TYPES.A_CODE_RUN) {
-            const { userName: userWhoRan, langId: newLangId } = payload;
-            const langName = languageDataWithKeys[newLangId]?.name;
-            return (
-              <Text key={Math.random()}>
-                User{' '}
-                <Text as='span' color='#3182CE'>
-                  {userWhoRan}
-                </Text>{' '}
-                ran
-                <Text as='span' color='#38A169'>
-                  {' '}
-                  {langName}
-                </Text>{' '}
-                code just now.
-              </Text>
-            );
-          } else if (type === STDOUT_TYPES.A_CODE_RUN_RESULT) {
-            const { result } = payload;
-            return (
-              <Text key={Math.random()} whiteSpace='pre'>
-                {result}
-              </Text>
-            );
-          } else if (type === STDOUT_TYPES.A_LANGUAGE_CHANGE) {
-            const { userName: userWhoChanged, language } = payload;
-            return (
-              <Text key={Math.random()}>
-                User{' '}
-                <Text as='span' color='#3182CE'>
-                  {userWhoChanged}
-                </Text>{' '}
-                changed language to
-                <Text as='span' color='#38A169'>
-                  {' '}
-                  {language}
-                </Text>
-              </Text>
-            );
-          }
-          return null;
-        })}
-      </Flex>
-    );
-  };
-
   return (
     <Flex height='100%' width='100%' className='container'>
       <Resizable
@@ -493,7 +423,7 @@ const CodeEditor = ({ userName }: CodeEditorProps) => {
           />
         </Flex>
       </Resizable>
-      <Terminal />
+      <Terminal items={stdoutOutput} />
     </Flex>
   );
 };
