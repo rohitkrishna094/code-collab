@@ -85,7 +85,8 @@
     },
     "lint-staged": {
         "*.{js,ts,tsx}": [
-            "eslint --fix"
+            "prettier --config .prettierrc --write",
+            "eslint '*/**/*.{js,ts,tsx}' --fix"
         ]
     },
     "devDependencies": {

@@ -99,7 +99,7 @@ const initialTerminalState = [
   },
 ];
 
-const CodeEditor = ({ userName }: CodeEditorProps) => {
+const CodeEditor = ({ userName }: CodeEditorProp) => {
   const [mode, setMode] = useState('java');
   const [langId, setLangId] = useState(getDefaultLangId());
   const [codeValue, setCodeValue] = useState(getDefaultMode(langId + ''));
