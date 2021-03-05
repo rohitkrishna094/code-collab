@@ -56,7 +56,7 @@
         "build": "react-scripts --max_old_space_size=4096 build",
         "test": "react-scripts test --passWithNoTests",
         "eject": "react-scripts eject",
-        "lint": "eslint '*/**/*.{js,ts,tsx}' --quiet",
+        "lint": "eslint '*/**/*.{js,ts,tsx}'",
         "lintFix": "eslint '*/**/*.{js,ts,tsx}' --fix",
         "deploy": "react-scripts build && gh-pages -d build"
     },
