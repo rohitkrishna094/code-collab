@@ -1,7 +1,6 @@
 import { Flex, Button } from '@chakra-ui/react';
 import React, { useEffect, useRef } from 'react';
 import CanvasDraw from 'react-canvas-draw';
-import './DrawingPad.scss';
 
 const DrawingPad = () => {
   const canvasRef = useRef<any>(null);

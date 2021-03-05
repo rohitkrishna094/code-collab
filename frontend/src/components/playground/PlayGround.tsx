@@ -22,6 +22,7 @@ import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { baseUrl } from '../../api/apiInfo';
 import useQuery from '../../hooks/useQuery';
 import Logo from '../Logo/Logo';
+import DrawingPadNative from '../DrawingPad/DrawingPadNative';
 
 interface Params {
   roomId: string;
@@ -116,7 +117,7 @@ const PlayGround = (props: any) => {
           width='100%'
           display='flex'
           flexDirection='column'
-          defaultIndex={0}
+          defaultIndex={1}
           isLazy
         >
           <TabList>
@@ -150,7 +151,8 @@ const PlayGround = (props: any) => {
               <CodeEditor userName={name} />
             </TabPanel>
             <TabPanel padding={0} height='100%'>
-              <DrawingPad />
+              {/* <DrawingPad /> */}
+              <DrawingPadNative />
               {/* <DrawingPadExcaliDraw /> */}
             </TabPanel>
           </TabPanels>
