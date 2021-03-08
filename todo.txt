@@ -19,4 +19,10 @@ bugs
 
 Low Priority
 ------------
+* Theming system
+    - When user changes code editor theme, full website theme should change accordingly
+    - This includes scrollbars, buttons etc
+    - Choose proper themeing system like primary, secondary button colors etc
+* Add Code editor settings like vim/emacs bindings etc.
+    - Look at what other settings react-ace and ace editor offers
 * Recheck overflow fix on terminal container
