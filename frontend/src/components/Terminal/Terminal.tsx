@@ -9,11 +9,11 @@ const Terminal = ({ items }: any) => {
       color='white'
       minWidth='30%'
       width='30%'
-      flex='1'
       bg='#272822'
       direction='column'
       height='100%'
       padding={5}
+      overflowY='auto'
     >
       {items.map((item: any) => {
         const { type, payload } = item;

@@ -11,7 +11,12 @@
 * add redis etc?
 * host judge api on your own(aws, digitalocean, vultr?)
 * Use airbnb react eslint
+* Github actions
+    - Run action based on subfolder update
 
 bugs
 ----
-* Fix overflow on terminal container
+
+Low Priority
+------------
+* Recheck overflow fix on terminal container

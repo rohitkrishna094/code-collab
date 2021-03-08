@@ -107,6 +107,7 @@ const PlayGround = (props: any) => {
       direction='column'
       height='100vh'
       width='100vw'
+      overflow='hidden'
     >
       <Navbar />
       <Flex className='playground-inner' flex='1'>
@@ -147,7 +148,12 @@ const PlayGround = (props: any) => {
             ))}
           </TabList>
           <TabPanels flex='1 1 auto'>
-            <TabPanel padding={0} height='100%'>
+            <TabPanel
+              padding={0}
+              height='100%'
+              maxHeight='calc(100vh - 94px)' // temp fix for the overflow on Terminal component
+              className='yehyeh'
+            >
               <CodeEditor userName={name} />
             </TabPanel>
             <TabPanel padding={0} height='100%'>
