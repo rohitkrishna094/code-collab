@@ -1,3 +1,4 @@
+* Redirect stderr to terminal component as well
 * sync 
     - draw output sync
 * cleanup code
@@ -13,9 +14,13 @@
 * Use airbnb react eslint
 * Github actions
     - Run action based on subfolder update
+* Fix default languages since they are not working
+    - C, C#, Erlang, Python, Kotlin
+* Remove scrollbar on terminal window(just like interviewing.io website)
 
 bugs
 ----
+* Another bug popped up which is not there in production. Press enter and cursor doesnt stay at bottom in code editor
 
 Low Priority
 ------------

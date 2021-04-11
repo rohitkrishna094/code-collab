@@ -107,6 +107,8 @@ const PlayGround = (props: any) => {
       direction='column'
       height='100vh'
       width='100vw'
+      maxHeight='100vh'
+      maxWidth='100vw'
       overflow='hidden'
     >
       <Navbar />
@@ -152,7 +154,8 @@ const PlayGround = (props: any) => {
               padding={0}
               height='100%'
               maxHeight='calc(100vh - 94px)' // temp fix for the overflow on Terminal component
-              className='yehyeh'
+              className='tab_panel_code_editor_wrapper'
+              position='relative'
             >
               <CodeEditor userName={name} />
             </TabPanel>

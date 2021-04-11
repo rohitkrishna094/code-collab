@@ -5,3 +5,7 @@ export enum STDOUT_TYPES {
   A_CODE_RUN_RESULT,
   A_CODE_RUN,
 }
+
+export enum CHAT_TYPES {
+  A_SENT_MESSAGE,
+}

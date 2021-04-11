@@ -53,6 +53,10 @@ import {
 } from '../../socket';
 import { STDOUT_TYPES } from '../../actionTypes';
 import Terminal from '../Terminal/Terminal';
+import Chat, { ChatToggle } from '../Chat/Chat';
+import TerminalReducer, {
+  initialTerminalState,
+} from '../../store/reducers/TerminalReducer';
 
 // Object.keys(languageDataWithKeys).forEach(key => {
 //   const languageData = languageDataWithKeys[key];
@@ -90,15 +94,6 @@ const getDefaultMode = (id: string) => {
 
 const getDefaultLangId = () => 62;
 
-const initialTerminalState = [
-  {
-    type: STDOUT_TYPES.A_MESSAGE,
-    payload: {
-      data: 'Environment is ready, just click run button and enjoy!',
-    },
-  },
-];
-
 const CodeEditor = ({ userName }: CodeEditorProps) => {
   const [mode, setMode] = useState('java');
   const [langId, setLangId] = useState(getDefaultLangId());
@@ -107,39 +102,8 @@ const CodeEditor = ({ userName }: CodeEditorProps) => {
   const [isCompiling, setIsCompiling] = useState(false);
   const [isError, setIsError] = useState(false);
   const [codeError, setCodeError] = useState('');
+  const [isChatOpen, setIsChatOpen] = useState(true);
   const editorRef = useRef<any>(null);
-
-  const TerminalReducer = (state: any, action: any) => {
-    const { type, payload } = action;
-    const newState = cloneDeep(state);
-    if (type === STDOUT_TYPES.A_MESSAGE) {
-      const { data } = payload;
-      newState.push({ type: STDOUT_TYPES.A_MESSAGE, payload: { data } });
-      return newState;
-    } else if (type === STDOUT_TYPES.A_CODE_RUN) {
-      const { userName: userWhoRan } = payload;
-      newState.push({
-        type: STDOUT_TYPES.A_CODE_RUN,
-        payload: { userName: userWhoRan, langId },
-      });
-      return newState;
-    } else if (type === STDOUT_TYPES.A_CODE_RUN_RESULT) {
-      const { result } = payload;
-      newState.push({
-        type: STDOUT_TYPES.A_CODE_RUN_RESULT,
-        payload: { result },
-      });
-      return newState;
-    } else if (type === STDOUT_TYPES.A_LANGUAGE_CHANGE) {
-      const { userName: userWhoChanged, language } = payload;
-      newState.push({
-        type: STDOUT_TYPES.A_LANGUAGE_CHANGE,
-        payload: { userName: userWhoChanged, language },
-      });
-      return newState;
-    }
-    return state;
-  };
 
   const [stdoutOutput, dispatchStdoutOutput] = useReducer(
     TerminalReducer,
@@ -224,6 +188,10 @@ const CodeEditor = ({ userName }: CodeEditorProps) => {
   //   socket.emit('codeselectionchange', selection.getRange());
   // };
 
+  const onChatToggle = () => {
+    setIsChatOpen(!isChatOpen);
+  };
+
   const submitCode = async (id: number, sourceCode: string | undefined) => {
     try {
       setIsCompiling(true);
@@ -307,124 +275,155 @@ const CodeEditor = ({ userName }: CodeEditorProps) => {
     await queryResults(token);
   };
 
-  return (
-    <Flex height='100%' width='100%' className='container'>
-      <Resizable
-        defaultSize={{
-          width: '70%',
-          height: '100%',
-        }}
-        style={{ borderRight: '10px solid #202020' }}
-        maxWidth='70%'
-        minWidth='30%'
-        enable={{
-          top: false,
-          right: true,
-          bottom: false,
-          left: false,
-          topRight: false,
-          bottomRight: false,
-          bottomLeft: false,
-          topLeft: false,
-        }}
+  const CodeEditorHeader = (props: any) => {
+    return (
+      <Flex
+        color='white'
+        padding={2}
+        className='code-header'
+        bg='#202020'
+        {...props}
       >
-        <Flex
-          direction='column'
-          position='relative'
-          height='100%'
-          width='100%'
-          bg='cornsilk'
-          className='code-editor-comp'
+        <Button
+          colorScheme='blue'
+          size='sm'
+          onClick={onRunClick}
+          disabled={isCompiling}
         >
-          <Flex color='white' padding={2} className='code-header' bg='#202020'>
-            <Button
-              colorScheme='blue'
-              size='sm'
-              onClick={onRunClick}
-              disabled={isCompiling}
+          <HStack>
+            <Box>Run</Box>
+            {isCompiling ? (
+              <Spinner size='sm' />
+            ) : (
+              <Box>
+                <FaPlay fontSize='10px' />
+              </Box>
+            )}
+          </HStack>
+        </Button>
+        <Select
+          cursor='pointer'
+          ml={5}
+          size='sm'
+          width='7rem'
+          borderRadius='0.375rem'
+          value={langId}
+          onChange={onLanguageChange}
+        >
+          {Object.keys(languageDataWithKeys).map(id => {
+            const langData = languageDataWithKeys[id];
+            return (
+              <option
+                key={id}
+                value={id}
+                style={{ backgroundColor: '#202020' }}
+              >
+                {langData.name}
+              </option>
+            );
+          })}
+        </Select>
+        <Select
+          cursor='pointer'
+          ml={5}
+          size='sm'
+          width='10rem'
+          borderRadius='0.375rem'
+          value={theme}
+          onChange={e => {
+            const newTheme = e.target.value;
+            setTheme(newTheme);
+          }}
+        >
+          {themes.map(_theme => (
+            <option
+              key={Math.random()}
+              value={_theme}
+              style={{ backgroundColor: '#202020' }}
             >
-              <HStack>
-                <Box>Run</Box>
-                {isCompiling ? (
-                  <Spinner size='sm' />
-                ) : (
-                  <Box>
-                    <FaPlay fontSize='10px' />
-                  </Box>
-                )}
-              </HStack>
-            </Button>
-            <Select
-              cursor='pointer'
-              ml={5}
-              size='sm'
-              width='7rem'
-              borderRadius='0.375rem'
-              value={langId}
-              onChange={onLanguageChange}
-            >
-              {Object.keys(languageDataWithKeys).map(id => {
-                const langData = languageDataWithKeys[id];
-                return (
-                  <option
-                    key={id}
-                    value={id}
-                    style={{ backgroundColor: '#202020' }}
-                  >
-                    {langData.name}
-                  </option>
-                );
-              })}
-            </Select>
-            <Select
-              cursor='pointer'
-              ml={5}
-              size='sm'
-              width='10rem'
-              borderRadius='0.375rem'
-              value={theme}
-              onChange={e => {
-                const newTheme = e.target.value;
-                setTheme(newTheme);
-              }}
-            >
-              {themes.map(_theme => (
-                <option
-                  key={Math.random()}
-                  value={_theme}
-                  style={{ backgroundColor: '#202020' }}
-                >
-                  {_theme}
-                </option>
-              ))}
-            </Select>
-          </Flex>
-          <AceEditor
-            mode={mode}
-            theme={theme}
+              {_theme}
+            </option>
+          ))}
+        </Select>
+      </Flex>
+    );
+  };
+  return (
+    <>
+      <ChatToggle
+        isChatOpen={isChatOpen}
+        onChatToggle={onChatToggle}
+        style={{ marginTop: 'calc(-94px + 47px - 40px)' }}
+      />
+      <Chat shouldDisplay={isChatOpen} />
+      <Flex
+        height='100%'
+        width={isChatOpen ? '75%' : '100%'}
+        // width='100%'
+        maxWidth='100vw'
+        className='container'
+        boxSizing='border-box'
+        position='relative'
+      >
+        <Resizable
+          defaultSize={{
+            // width: '45%',
+            width: '70%',
+            height: '100%',
+          }}
+          style={{ borderRight: '10px solid #202020' }}
+          maxWidth='70%'
+          minWidth='40%'
+          // size={{
+          //   width: isChatOpen ? '45%' : '70%',
+          //   height: '100%',
+          // }}
+          enable={{
+            top: false,
+            right: true,
+            bottom: false,
+            left: false,
+            topRight: false,
+            bottomRight: false,
+            bottomLeft: false,
+            topLeft: false,
+          }}
+        >
+          <CodeEditorHeader />
+          <Flex
+            direction='column'
+            position='relative'
             height='100%'
             width='100%'
-            onChange={onChange}
-            name='CODEEDITOR'
-            editorProps={{ $blockScrolling: true }}
-            fontSize={14}
-            showPrintMargin={true}
-            showGutter={true}
-            highlightActiveLine={true}
-            focus={true}
-            setOptions={{
-              enableBasicAutocompletion: true,
-              enableLiveAutocompletion: true,
-              enableSnippets: true,
-              showLineNumbers: true,
-              tabSize: 2,
-            }}
-            value={codeValue}
-          />
-        </Flex>
-      </Resizable>
-      <Terminal items={stdoutOutput} />
-    </Flex>
+            bg='cornsilk'
+          >
+            <AceEditor
+              mode={mode}
+              theme={theme}
+              height='100%'
+              width='100%'
+              onChange={onChange}
+              name='CODEEDITOR'
+              editorProps={{ $blockScrolling: true }}
+              fontSize={14}
+              showPrintMargin={true}
+              showGutter={true}
+              highlightActiveLine={true}
+              focus={true}
+              setOptions={{
+                enableBasicAutocompletion: true,
+                enableLiveAutocompletion: true,
+                enableSnippets: true,
+                showLineNumbers: true,
+                tabSize: 2,
+              }}
+              value={codeValue}
+            />
+          </Flex>
+        </Resizable>
+        <Terminal items={stdoutOutput} />
+      </Flex>
+    </>
   );
 };
 
