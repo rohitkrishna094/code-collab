@@ -1,5 +1,5 @@
 import { Flex, Text } from '@chakra-ui/layout';
-import React, { useReducer, useState } from 'react';
+import React, { useEffect, useReducer, useState } from 'react';
 import { TiArrowSortedDown } from 'react-icons/ti';
 import { IoMdChatbubbles, IoMdSend } from 'react-icons/io';
 import { Avatar } from '@chakra-ui/avatar';
@@ -8,12 +8,20 @@ import ResizeTextarea from 'react-textarea-autosize';
 import { Textarea } from '@chakra-ui/textarea';
 import ChatReducer from '../../store/reducers/ChatReducer';
 import { CHAT_TYPES } from '../../actionTypes';
+import { isBlank, isNotBlank } from '../../utils/stringUtils';
+import {
+  CHAT_MESSAGE_SENT,
+  SChatMessageSentEventInput,
+  socket,
+} from '../../socket';
+import { useSelector } from 'react-redux';
 
 const dummyImg =
   'https://images.unsplash.com/photo-1554151228-14d9def656e4?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=633&q=80';
 
 const ChatItem = (props: any) => {
-  const { content, isMyMessage, userName } = props;
+  const { content, userName, isMyMessage } = props;
+
   return (
     <Flex className='chat-item-wrapper' width='100%' mb={2}>
       <Flex className='avatar' display={isMyMessage ? 'none' : 'flex'}>
@@ -61,34 +69,34 @@ const Chat = (props: any) => {
   const { shouldDisplay } = props;
   const [value, setValue] = useState('');
   const [chatContent, dispatchChatContent] = useReducer(ChatReducer, []);
+  const userState = useSelector((state: any) => state.user);
+  const { userName } = userState;
 
-  let dummyText = [
-    { userName: 'luffy', msg: "Where is punk hazard? Let's go 😂🤣😂" },
-    { userName: 'zoro', msg: 'Are you lost?🥱' },
-    {
-      userName: 'luffy',
-      msg: 'Zoro, what are you doing on Blackbeards ship🤣🤣🤣',
-    },
-    {
-      userName: 'nami',
-      msg:
-        'luffy and zoro, get me money or else I will kill you both🤑🤑😤😒😠',
-    },
-    { userName: 'sanji vinsmoke', msg: 'nami-chwaaaan!😍😘🥰' },
-  ];
-  dummyText = new Array(10).fill(dummyText).flat();
+  useEffect(() => {
+    socket.on(CHAT_MESSAGE_SENT, (data: SChatMessageSentEventInput) => {
+      dispatchChatContent(data);
+    });
+
+    return () => {
+      socket.off(CHAT_MESSAGE_SENT);
+    };
+  }, []);
 
   const handleInputChange = (e: any) => {
-    console.log(e.target.value);
     setValue(e.target.value);
   };
 
   const onKeyDown = (e: any) => {
-    if (e.key === 'Enter') {
-      dispatchChatContent({
+    if (isBlank(userName)) return;
+
+    if (e.key === 'Enter' && isNotBlank(value)) {
+      const chatMessageSentAction: any = {
         type: CHAT_TYPES.A_SENT_MESSAGE,
-        payload: { userName: 'myself', isMyMessage: true, msg: value },
-      });
+        payload: { userName, msg: value },
+      };
+      socket.emit(CHAT_MESSAGE_SENT, chatMessageSentAction);
+      chatMessageSentAction.payload.isMyMessage = true;
+      dispatchChatContent(chatMessageSentAction);
       setValue('');
     }
   };

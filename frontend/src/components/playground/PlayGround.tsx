@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useReducer } from 'react';
 import {
   Box,
   Button,
@@ -19,10 +19,12 @@ import { RiCodeSSlashLine, RiPencilFill } from 'react-icons/ri';
 import './PlayGround.scss';
 import { useParams } from 'react-router';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
-import { baseUrl } from '../../api/apiInfo';
 import useQuery from '../../hooks/useQuery';
 import Logo from '../Logo/Logo';
 import DrawingPadNative from '../DrawingPad/DrawingPadNative';
+import { USER_TYPES } from '../../actionTypes';
+import { isNotBlank } from '../../utils/stringUtils';
+import { useDispatch } from 'react-redux';
 
 interface Params {
   roomId: string;
@@ -37,6 +39,7 @@ const PlayGround = (props: any) => {
   const query: any = useQuery();
   const name = query.get('user');
   const toast = useToast();
+  const dispatch = useDispatch();
 
   useEffect(() => {
     socket.on(USER_JOIN, (userName: string) => {
@@ -68,6 +71,15 @@ const PlayGround = (props: any) => {
       socket.off(USER_LEFT);
     };
   }, []);
+
+  useEffect(() => {
+    if (isNotBlank(name)) {
+      dispatch({
+        type: USER_TYPES.A_USERNAME_CHANGE,
+        payload: { name },
+      });
+    }
+  }, [name]);
 
   const Navbar = () => {
     return (

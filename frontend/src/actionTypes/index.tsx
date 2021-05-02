@@ -9,3 +9,7 @@ export enum STDOUT_TYPES {
 export enum CHAT_TYPES {
   A_SENT_MESSAGE,
 }
+
+export enum USER_TYPES {
+  A_USERNAME_CHANGE,
+}

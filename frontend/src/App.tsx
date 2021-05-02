@@ -4,7 +4,6 @@ import { HashRouter as Router, Switch, Route } from 'react-router-dom';
 import './App.css';
 import PlayGround from './components/playground/PlayGround';
 import Home from './components/Home/Home';
-import useQuery from './hooks/useQuery';
 
 function App() {
   return (

@@ -6,7 +6,6 @@ interface SJoinRoomEventInput {
   room: string;
   name: string;
 }
-
 interface SLanguageChangeEventInput {
   id: number;
   mode: string;
@@ -24,6 +23,11 @@ interface SCodeRunResultEventInput {
   payload: { result: string };
 }
 
+interface SChatMessageSentEventInput {
+  type: string;
+  payload: { userName: string; msg: string };
+}
+
 // socket io event constants
 const USER_JOIN = 'userjoin';
 const CODE_CHANGE = 'codechange';
@@ -31,6 +35,7 @@ const LANGUAGE_CHANGE = 'language_change';
 const CODE_RUN = 'code_run';
 const CODE_RUN_RESULT = 'code_run_result';
 const USER_LEFT = 'userleft';
+const CHAT_MESSAGE_SENT = 'chat_message_sent';
 
 export default (server: Server) => {
   const io = new SocketServer(server, {
@@ -63,7 +68,7 @@ export default (server: Server) => {
     });
 
     socket.on(CODE_RUN, (data: SCodeRunEventInput) => {
-      console.log(CODE_RUN, data.payload);
+      console.log(CODE_RUN, data);
       socket.to(roomId).emit(CODE_RUN, data);
     });
 
@@ -77,8 +82,9 @@ export default (server: Server) => {
     //   socket.to(roomId).emit('codeselectionchange', range);
     // });
 
-    socket.on('chatmessage', (data: any) => {
-      socket.to(roomId).emit('chatmessage', data);
+    socket.on(CHAT_MESSAGE_SENT, (data: SChatMessageSentEventInput) => {
+      console.log(CHAT_MESSAGE_SENT, data);
+      socket.to(roomId).emit(CHAT_MESSAGE_SENT, data);
     });
 
     socket.on('disconnect', () => {

@@ -49,6 +49,9 @@ import {
   CODE_RUN,
   CODE_RUN_RESULT,
   LANGUAGE_CHANGE,
+  SCodeRunEvent,
+  SCodeRunResultEvent,
+  SLanguageChangeEvent,
   socket,
 } from '../../socket';
 import { STDOUT_TYPES } from '../../actionTypes';
@@ -68,23 +71,6 @@ import TerminalReducer, {
 
 interface CodeEditorProps {
   userName: string;
-}
-
-// socket io event types, S stands for socket io
-interface SLanguageChangeEvent {
-  id: number;
-  mode: string;
-  codeValue: string;
-  userName: string;
-}
-interface SCodeRunEvent {
-  type: string;
-  payload: { userName: string; langId: number };
-}
-
-interface SCodeRunResultEvent {
-  type: string;
-  payload: { result: string };
 }
 
 const getDefaultMode = (id: string) => {
