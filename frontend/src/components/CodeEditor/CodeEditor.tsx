@@ -23,7 +23,6 @@ import { Ace } from 'ace-builds';
 import 'ace-builds/src-noconflict/mode-c_cpp';
 import 'ace-builds/src-noconflict/mode-clojure';
 import 'ace-builds/src-noconflict/mode-csharp';
-import 'ace-builds/src-noconflict/mode-erlang';
 import 'ace-builds/src-noconflict/mode-golang';
 import 'ace-builds/src-noconflict/mode-java';
 import 'ace-builds/src-noconflict/mode-javascript';
@@ -257,7 +256,7 @@ const CodeEditor = ({ userName }: CodeEditorProps) => {
 
     const token = await submitCode(langId, codeValue);
 
-    await delay(5000);
+    await delay(3000);
     await queryResults(token);
   };
 

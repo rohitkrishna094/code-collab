@@ -1,4 +1,18 @@
+Top Priority
+-------------
 * Redirect stderr to terminal component as well
+* Add a nice readme
+* Remove scrollbar on terminal window(just like interviewing.io website)
+* Chat Section improvements
+    - Remove Enter key bug
+    - See if there is a better library to be used
+    - Add emoji picker, gif picker etc
+    - When new message comes from others, always scroll to bottom i.e., focus of the window should be on bottom so user can immediately read the message. 
+      Try minimizing the window and reproduce this issue.
+* Add a slick landing page with animations, illustrations and memes :P 
+
+Todo
+----
 * sync 
     - draw output sync
 * cleanup code
@@ -7,20 +21,17 @@
     - pull things into utils
     - pull things into actions
 * deploy to netlify
-* add chat window
 * add sidebar/home etc
 * add redis etc?
 * host judge api on your own(aws, digitalocean, vultr?)
 * Use airbnb react eslint
 * Github actions
     - Run action based on subfolder update
-* Fix default languages since they are not working
-    - C, C#, Erlang, Python, Kotlin
-* Remove scrollbar on terminal window(just like interviewing.io website)
 
 bugs
 ----
-* Another bug popped up which is not there in production. Press enter and cursor doesnt stay at bottom in code editor
+* Code editor window scroll issue
+    - Keep pressing enter key all the way to the bottom and there is a css layout issue.
 
 Low Priority
 ------------

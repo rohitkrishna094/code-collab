@@ -4,13 +4,15 @@ const defaultJava = `public class Main {
   }
 }`;
 
-const defaultCSharp = `public void HelloWorld() {
-    //Say Hello!
-    Console.WriteLine("Hello World");
+const defaultCSharp = `using System;
+
+class Program {
+    static void Main(string[] args) {
+        Console.WriteLine("Hello, world!");
+    }
 }`;
 
-const defaultPython = `def say_hello():
-    print('Hello, World')`;
+const defaultPython = `print('Hello, World')`;
 
 const defaultKotlin = `fun main() {
     println("Hello, World!")
@@ -36,12 +38,6 @@ int main() {
   cout << "Hello World";
   return 0;
 }`;
-
-const defaultErlang = `-module(solution). 
--export([start/0]). 
-
-start() -> 
-   io:fwrite("Hello, world!\\n").`;
 
 const defaultJavascript = `console.log("hello world");`;
 
@@ -71,12 +67,6 @@ export const languageData = [
     defaultValue: defaultClojure,
   },
   { languageId: 51, name: 'C#', mode: 'csharp', defaultValue: defaultCSharp },
-  {
-    languageId: 58,
-    name: 'Erlang',
-    mode: 'erlang',
-    defaultValue: defaultErlang,
-  },
   { languageId: 60, name: 'Go', mode: 'golang', defaultValue: defaultGo },
   { languageId: 62, name: 'Java', mode: 'java', defaultValue: defaultJava },
   {
@@ -133,12 +123,6 @@ export const languageDataWithKeys: { [key: string]: Item } = {
     name: 'C#',
     mode: 'csharp',
     defaultValue: defaultCSharp,
-  },
-  '58': {
-    languageId: 58,
-    name: 'Erlang',
-    mode: 'erlang',
-    defaultValue: defaultErlang,
   },
   '60': { languageId: 60, name: 'Go', mode: 'golang', defaultValue: defaultGo },
   '62': {
