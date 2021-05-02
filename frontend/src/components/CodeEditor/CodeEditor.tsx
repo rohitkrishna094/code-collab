@@ -59,6 +59,7 @@ import Chat, { ChatToggle } from '../Chat/Chat';
 import TerminalReducer, {
   initialTerminalState,
 } from '../../store/reducers/TerminalReducer';
+import { isNotBlank } from '../../utils/stringUtils';
 
 // Object.keys(languageDataWithKeys).forEach(key => {
 //   const languageData = languageDataWithKeys[key];
@@ -214,7 +215,7 @@ const CodeEditor = ({ userName }: CodeEditorProps) => {
         const { data } = response.data;
         const { stderr, status, stdout, compile_output: compileOutput } = data;
         console.log('results', response);
-        if (status && [1, 2, 3].includes(status.id)) {
+        if (status && [1, 2, 3].includes(status.id) && isNotBlank(stdout)) {
           console.log('we got stdout', stdout);
           setIsCompiling(false);
           const codeResultAction = {
@@ -225,11 +226,24 @@ const CodeEditor = ({ userName }: CodeEditorProps) => {
           socket.emit(CODE_RUN_RESULT, codeResultAction);
         } else if (compileOutput) {
           console.log(compileOutput);
+          const codeResultAction = {
+            type: STDOUT_TYPES.A_CODE_RUN_RESULT,
+            payload: { result: compileOutput },
+          };
+          dispatchStdoutOutput(codeResultAction);
+          socket.emit(CODE_RUN_RESULT, codeResultAction);
+
           setIsCompiling(false);
           setCodeError(stderr);
           setIsError(true);
         } else if (stderr) {
           console.log(stderr);
+          const codeResultAction = {
+            type: STDOUT_TYPES.A_CODE_RUN_RESULT,
+            payload: { result: stderr },
+          };
+          dispatchStdoutOutput(codeResultAction);
+
           setIsCompiling(false);
           setCodeError(stderr);
           setIsError(true);

@@ -1,6 +1,6 @@
 Top Priority
 -------------
-* Redirect stderr to terminal component as well
+* Distinguish between stdout, stderr, compile error, runtime error etc by color coding in terminal?
 * Add a nice readme
 * Remove scrollbar on terminal window(just like interviewing.io website)
 * Chat Section improvements
