@@ -1,12 +1,12 @@
 {
   "files": {
-    "main.css": "/code-collab/static/css/main.46ad0810.chunk.css",
-    "main.js": "/code-collab/static/js/main.f0c0dd8a.chunk.js",
-    "main.js.map": "/code-collab/static/js/main.f0c0dd8a.chunk.js.map",
-    "runtime-main.js": "/code-collab/static/js/runtime-main.70050b11.js",
-    "runtime-main.js.map": "/code-collab/static/js/runtime-main.70050b11.js.map",
-    "static/js/2.f836ddaa.chunk.js": "/code-collab/static/js/2.f836ddaa.chunk.js",
-    "static/js/2.f836ddaa.chunk.js.map": "/code-collab/static/js/2.f836ddaa.chunk.js.map",
+    "main.css": "/code-collab/static/css/main.7303d336.chunk.css",
+    "main.js": "/code-collab/static/js/main.4ded9eb5.chunk.js",
+    "main.js.map": "/code-collab/static/js/main.4ded9eb5.chunk.js.map",
+    "runtime-main.js": "/code-collab/static/js/runtime-main.a3265e05.js",
+    "runtime-main.js.map": "/code-collab/static/js/runtime-main.a3265e05.js.map",
+    "static/js/2.08681ef6.chunk.js": "/code-collab/static/js/2.08681ef6.chunk.js",
+    "static/js/2.08681ef6.chunk.js.map": "/code-collab/static/js/2.08681ef6.chunk.js.map",
     "mode-livescript.js": "/code-collab/00f32d088488515ac84b1ffe7fc0ec0d.js",
     "ftl.js": "/code-collab/024358f71f8096dd8052103dced05dbc.js",
     "mode-terraform.js": "/code-collab/02a3067bd4d8feab048883fbaff9722c.js",
@@ -257,7 +257,6 @@
     "xml.js": "/code-collab/990b30f9c25a55a13004637089d0f57f.js",
     "textile.js": "/code-collab/9a7e03d3ddbc6bbd880eb509f16d8d5f.js",
     "theme-merbivore_soft.js": "/code-collab/9b48abfdc934601ba912ddf5c1582f17.js",
-    "keybinding-vim.js": "/code-collab/9c1b58ae9d1f26f36020aa5b00a5806b.js",
     "mode-qml.js": "/code-collab/9c5f2c06e0ed624bcac50ffb22d750fd.js",
     "abc.js": "/code-collab/9cdf97ae76042eac50dc9214e064f2b2.js",
     "mode-jsp.js": "/code-collab/9ced3a5ccdf6e8efa63bd079e16ef2d4.js",
@@ -274,6 +273,7 @@
     "mediawiki.js": "/code-collab/a14d2bb5fd5da23a4b996e3761876f6d.js",
     "kotlin.js": "/code-collab/a3cd045afe0420fe0e35b9e004264f17.js",
     "css.js": "/code-collab/a4552ac47b32ab33fe64c1ae313c9ad6.js",
+    "keybinding-vim.js": "/code-collab/a470c9e55f65a68f8bccdca7c93affe3.js",
     "clojure.js": "/code-collab/a49d1ee5ebe140690b7c675a08c5b1b3.js",
     "theme-ambiance.js": "/code-collab/a57fdaff4d8cadfa3894290b3c164aed.js",
     "mode-xquery.js": "/code-collab/a6dd83b549a310861364eb64fe829205.js",
@@ -422,13 +422,13 @@
     "smarty.js": "/code-collab/ff6e85bb753b94d4add40e79a70c2875.js",
     "io.js": "/code-collab/ffb285847c77432bb38e9fbf9789d323.js",
     "index.html": "/code-collab/index.html",
-    "static/css/main.46ad0810.chunk.css.map": "/code-collab/static/css/main.46ad0810.chunk.css.map",
-    "static/js/2.f836ddaa.chunk.js.LICENSE.txt": "/code-collab/static/js/2.f836ddaa.chunk.js.LICENSE.txt"
+    "static/css/main.7303d336.chunk.css.map": "/code-collab/static/css/main.7303d336.chunk.css.map",
+    "static/js/2.08681ef6.chunk.js.LICENSE.txt": "/code-collab/static/js/2.08681ef6.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
-    "static/js/runtime-main.70050b11.js",
-    "static/js/2.f836ddaa.chunk.js",
-    "static/css/main.46ad0810.chunk.css",
-    "static/js/main.f0c0dd8a.chunk.js"
+    "static/js/runtime-main.a3265e05.js",
+    "static/js/2.08681ef6.chunk.js",
+    "static/css/main.7303d336.chunk.css",
+    "static/js/main.4ded9eb5.chunk.js"
   ]
 }
