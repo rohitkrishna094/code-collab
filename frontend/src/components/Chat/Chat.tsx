@@ -15,6 +15,7 @@ import {
   socket,
 } from '../../socket';
 import { useSelector } from 'react-redux';
+import './Chat.scss';
 
 const dummyImg =
   'https://images.unsplash.com/photo-1554151228-14d9def656e4?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=633&q=80';
@@ -133,26 +134,30 @@ const Chat = (props: any) => {
       <Flex
         className='chat-content'
         padding={3}
-        direction='column'
+        direction='column-reverse'
         overflowY='auto'
         borderBottom='4px solid #272822'
         height='100%'
         width='100%'
         mb={3}
       >
-        {chatContent.map((item: any) => {
-          const { type, payload } = item;
-          const { userName, msg, isMyMessage } = payload;
+        {/* reverse chatContent and then use map */}
+        {chatContent
+          .slice(0)
+          .reverse()
+          .map((item: any) => {
+            const { type, payload } = item;
+            const { userName, msg, isMyMessage } = payload;
 
-          return (
-            <ChatItem
-              key={Math.random()}
-              content={msg}
-              userName={userName}
-              isMyMessage={isMyMessage}
-            />
-          );
-        })}
+            return (
+              <ChatItem
+                key={Math.random()}
+                content={msg}
+                userName={userName}
+                isMyMessage={isMyMessage}
+              />
+            );
+          })}
       </Flex>
       <InputGroup
         className='chat-type-group'
