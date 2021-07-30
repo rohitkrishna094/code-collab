@@ -84,11 +84,15 @@ const Chat = (props: any) => {
   }, []);
 
   const handleInputChange = (e: any) => {
-    setValue(e.target.value);
+    const value = e.target.value;
+    // todo fix this bug where users type newline but its not persisted in chat section
+    if (value === '\n') return;
+    setValue(value);
   };
 
   const onKeyDown = (e: any) => {
     if (isBlank(userName)) return;
+    if (e.shiftKey) return;
 
     if (e.key === 'Enter' && isNotBlank(value)) {
       const chatMessageSentAction: any = {

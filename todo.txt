@@ -1,10 +1,11 @@
 Top Priority
 -------------
+* todo fix this bug where users type newline but its not persisted in chat section
 * Distinguish between stdout, stderr, compile error, runtime error etc by color coding in terminal?
 * Add a nice readme
 * Chat Section improvements
-    - Remove Enter key bug
     - See if there is a better library to be used
+    - limit to 40chars or something while chatting
     - Add emoji picker, gif picker etc
     - When new message comes from others, always scroll to bottom i.e., focus of the window should be on bottom so user can immediately read the message. 
       Try minimizing the window and reproduce this issue.
