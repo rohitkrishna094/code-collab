@@ -2,6 +2,7 @@ import { Flex, Text } from '@chakra-ui/layout';
 import React, { useEffect, useReducer, useState } from 'react';
 import { TiArrowSortedDown } from 'react-icons/ti';
 import { IoMdChatbubbles, IoMdSend } from 'react-icons/io';
+import { GrEmoji } from 'react-icons/gr';
 import { Avatar } from '@chakra-ui/avatar';
 import { InputGroup, InputRightElement } from '@chakra-ui/input';
 import ResizeTextarea from 'react-textarea-autosize';
@@ -16,6 +17,8 @@ import {
 } from '../../socket';
 import { useSelector } from 'react-redux';
 import './Chat.scss';
+import 'emoji-mart/css/emoji-mart.css';
+import { Emoji, Picker } from 'emoji-mart';
 
 const dummyImg =
   'https://images.unsplash.com/photo-1554151228-14d9def656e4?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=633&q=80';
@@ -71,6 +74,7 @@ const Chat = (props: any) => {
   const [value, setValue] = useState('');
   const [chatContent, dispatchChatContent] = useReducer(ChatReducer, []);
   const userState = useSelector((state: any) => state.user);
+  const [isEmojiPickerOpen, setIsEmojiPickerOpen] = useState(false);
   const { userName } = userState;
 
   useEffect(() => {
@@ -104,6 +108,18 @@ const Chat = (props: any) => {
       dispatchChatContent(chatMessageSentAction);
       setValue('');
     }
+  };
+
+  const onEmojiMouseDown = (e: any) => {
+    setIsEmojiPickerOpen(!isEmojiPickerOpen);
+  };
+
+  const onEmojiSelected = (e: any) => {
+    setValue(value + e.native);
+  };
+
+  const onEmojiClicked = (e: any) => {
+    // console.log(e);
   };
 
   return (
@@ -145,6 +161,7 @@ const Chat = (props: any) => {
         width='100%'
         mb={3}
       >
+        <Emoji emoji='santa' set='google' size={64} />
         {/* reverse chatContent and then use map */}
         {chatContent
           .slice(0)
@@ -177,8 +194,27 @@ const Chat = (props: any) => {
           value={value}
           onChange={handleInputChange}
         />
-
+        <Picker
+          style={{
+            display: isEmojiPickerOpen ? 'block' : 'none',
+            position: 'absolute',
+            bottom: '50px',
+            right: '0px',
+          }}
+          color='#38A169'
+          set='google'
+          native={true}
+          title='emoji picker'
+          emoji='point_up'
+          onSelect={onEmojiSelected}
+          onClick={onEmojiClicked}
+          showPreview={false}
+          showSkinTones={false}
+          emojiTooltip={true}
+          theme='dark'
+        />
         <InputRightElement className='add-icon-wrapper'>
+          <GrEmoji cursor='pointer' onMouseDown={onEmojiMouseDown} />
           <IoMdSend />
         </InputRightElement>
       </InputGroup>
