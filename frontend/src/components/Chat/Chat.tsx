@@ -19,6 +19,7 @@ import { useSelector } from 'react-redux';
 import './Chat.scss';
 import 'emoji-mart/css/emoji-mart.css';
 import { Emoji, Picker } from 'emoji-mart';
+import { randomEmojiFromMart } from '../../utils/emojiUtils';
 
 const dummyImg =
   'https://images.unsplash.com/photo-1554151228-14d9def656e4?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=633&q=80';
@@ -69,9 +70,13 @@ const AutoResizeTextarea = React.forwardRef((props: any, ref: any) => {
 
 AutoResizeTextarea.displayName = 'AutoResizeTextarea';
 
+const defaultEmojiSize = 24;
+
 const Chat = (props: any) => {
   const { shouldDisplay } = props;
   const [value, setValue] = useState('');
+  const [emojiImage, setEmojiImage] = useState('grinning');
+  const [emojiSize, setEmojiSize] = useState(defaultEmojiSize);
   const [chatContent, dispatchChatContent] = useReducer(ChatReducer, []);
   const userState = useSelector((state: any) => state.user);
   const [isEmojiPickerOpen, setIsEmojiPickerOpen] = useState(false);
@@ -118,6 +123,15 @@ const Chat = (props: any) => {
     setValue(value + e.native);
   };
 
+  const onEmojiOver = (e: any) => {
+    setEmojiSize(32);
+    setEmojiImage(randomEmojiFromMart());
+  };
+
+  const onEmojiLeave = (e: any) => {
+    setEmojiSize(defaultEmojiSize);
+  };
+
   const onEmojiClicked = (e: any) => {
     // console.log(e);
   };
@@ -161,7 +175,6 @@ const Chat = (props: any) => {
         width='100%'
         mb={3}
       >
-        <Emoji emoji='santa' set='google' size={64} />
         {/* reverse chatContent and then use map */}
         {chatContent
           .slice(0)
@@ -214,8 +227,16 @@ const Chat = (props: any) => {
           theme='dark'
         />
         <InputRightElement className='add-icon-wrapper'>
-          <GrEmoji cursor='pointer' onMouseDown={onEmojiMouseDown} />
-          <IoMdSend />
+          <Flex className='emoji-container'>
+            <Emoji
+              emoji={emojiImage}
+              set='google'
+              size={emojiSize}
+              onClick={onEmojiMouseDown}
+              onOver={onEmojiOver}
+              onLeave={onEmojiLeave}
+            />
+          </Flex>
         </InputRightElement>
       </InputGroup>
     </Flex>

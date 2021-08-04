@@ -21,3 +21,10 @@
     background: #1a1a1a;
   }
 }
+
+.emoji-container {
+  filter: grayscale(100%);
+  &:hover {
+    filter: none;
+  }
+}

@@ -7,9 +7,7 @@ Top Priority
     - See if there is a better library to be used
     - limit to 40chars or something while chatting
     - Stylize emoji picker scrollbar
-    - Stylize chat's enter button and emoji picker button
-    - When new message comes from others, always scroll to bottom i.e., focus of the window should be on bottom so user can immediately read the message. 
-      Try minimizing the window and reproduce this issue.
+    - Try minimizing the window and reproduce this issue.
 * Add a slick landing page with animations, illustrations and memes :P 
 * terminal scroll to bottom when new text gets added.
 * Upload code feature
