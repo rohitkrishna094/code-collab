@@ -7,14 +7,18 @@ import {
   HStack,
   Select,
   Spinner,
-  Text,
+  Tooltip,
 } from '@chakra-ui/react';
-import { cloneDeep } from 'lodash';
 import axios from 'axios';
 import { FaPlay } from 'react-icons/fa';
+import { FiDownloadCloud, FiUploadCloud } from 'react-icons/fi';
 import 'ace-builds/src-min-noconflict/ext-language_tools';
 import 'ace-builds/webpack-resolver';
-import { themes, languageDataWithKeys } from './editorData';
+import {
+  themes,
+  languageDataWithKeys,
+  getExtensionByLangId,
+} from './editorData';
 import { judgeUrl } from '../../api/apiInfo';
 import { delay } from '../../utils';
 import { Resizable } from 're-resizable';
@@ -274,13 +278,29 @@ const CodeEditor = ({ userName }: CodeEditorProps) => {
     await queryResults(token);
   };
 
+  const onDownloadClick = (e: any) => {
+    const aTag = document.createElement('a');
+    const file = new Blob([codeValue as BlobPart], {
+      type: 'text/plain;charset=utf-8',
+    });
+    aTag.href = URL.createObjectURL(file);
+    aTag.download = `code-collab_${Date.now()}.${getExtensionByLangId(
+      langId + '',
+    )}`;
+    aTag.click();
+  };
+
+  const onUploadClick = () => {
+    console.log('object');
+  };
+
   const CodeEditorHeader = (props: any) => {
     return (
       <Flex
         color='white'
         padding={2}
-        className='code-header'
         bg='#202020'
+        className='code-header'
         {...props}
       >
         <Button
@@ -344,6 +364,18 @@ const CodeEditor = ({ userName }: CodeEditorProps) => {
             </option>
           ))}
         </Select>
+        <Flex className='code-controls' color='white' ml='auto'>
+          <Tooltip hasArrow label='Download'>
+            <Button colorScheme='blue' size='sm' onClick={onDownloadClick}>
+              <FiDownloadCloud fontSize='20px' />
+            </Button>
+          </Tooltip>
+          <Tooltip hasArrow label='Upload'>
+            <Button colorScheme='blue' size='sm' onClick={onUploadClick} ml={2}>
+              <FiUploadCloud fontSize='20px' />
+            </Button>
+          </Tooltip>
+        </Flex>
       </Flex>
     );
   };

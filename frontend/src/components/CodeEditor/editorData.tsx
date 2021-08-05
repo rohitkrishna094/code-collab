@@ -102,65 +102,98 @@ interface Item {
   name: string;
   mode: string;
   defaultValue: string;
+  extension: string;
 }
 
+export const getExtensionByLangId = (id: string) => {
+  const langData = languageDataWithKeys[id];
+  return langData.extension;
+};
+
 export const languageDataWithKeys: { [key: string]: Item } = {
-  '50': { languageId: 50, name: 'C', mode: 'c_cpp', defaultValue: defaultC },
+  '50': {
+    languageId: 50,
+    name: 'C',
+    mode: 'c_cpp',
+    defaultValue: defaultC,
+    extension: 'c',
+  },
   '54': {
     languageId: 54,
     name: 'C++',
     mode: 'c_cpp',
     defaultValue: defaultCpp,
+    extension: 'cpp',
   },
   '86': {
     languageId: 86,
     name: 'Clojure',
     mode: 'clojure',
     defaultValue: defaultClojure,
+    extension: 'clj',
   },
   '51': {
     languageId: 51,
     name: 'C#',
     mode: 'csharp',
     defaultValue: defaultCSharp,
+    extension: 'cs',
   },
-  '60': { languageId: 60, name: 'Go', mode: 'golang', defaultValue: defaultGo },
+  '60': {
+    languageId: 60,
+    name: 'Go',
+    mode: 'golang',
+    defaultValue: defaultGo,
+    extension: 'go',
+  },
   '62': {
     languageId: 62,
     name: 'Java',
     mode: 'java',
     defaultValue: defaultJava,
+    extension: 'java',
   },
   '63': {
     languageId: 63,
     name: 'Javascript',
     mode: 'javascript',
     defaultValue: defaultJavascript,
+    extension: 'js',
   },
   '78': {
     languageId: 78,
     name: 'Kotlin',
     mode: 'kotlin',
     defaultValue: defaultKotlin,
+    extension: 'kt',
   },
-  '68': { languageId: 68, name: 'PHP', mode: 'php', defaultValue: defaultPhp },
+  '68': {
+    languageId: 68,
+    name: 'PHP',
+    mode: 'php',
+    defaultValue: defaultPhp,
+    extension: 'php',
+  },
   '71': {
     languageId: 71,
     name: 'Python',
     mode: 'python',
     defaultValue: defaultPython,
+    extension: 'py',
   },
   '72': {
     languageId: 72,
     name: 'Ruby',
     mode: 'ruby',
     defaultValue: defaultRuby,
+    extension: 'rb',
   },
   '74': {
     languageId: 74,
     name: 'Typescript',
     mode: 'typescript',
     defaultValue: defaultTypescript,
+    extension: 'ts',
   },
 };
 

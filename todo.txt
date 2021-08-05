@@ -4,6 +4,10 @@ Top Priority
 * Distinguish between stdout, stderr, compile error, runtime error etc by color coding in terminal?
 * Add a nice readme
 * Chat Section improvements
+    - Show no.of members in lobby
+    - Notify the user if someone messages(especially if chat drawer is hidden)
+    - Show 'someone is typing...' in chat box
+    - Show list of users in the lobby
     - See if there is a better library to be used
     - limit to 40chars or something while chatting
     - Stylize emoji picker scrollbar
@@ -11,7 +15,6 @@ Top Priority
 * Add a slick landing page with animations, illustrations and memes :P 
 * terminal scroll to bottom when new text gets added.
 * Upload code feature
-* Download code feature
 * Zen mode(full screen feature)
 * share code feature(use dpaste or some other service, carbonnow.sh etc)
 
