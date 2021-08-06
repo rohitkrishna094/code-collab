@@ -8,10 +8,12 @@ import {
   Select,
   Spinner,
   Tooltip,
+  useToast,
 } from '@chakra-ui/react';
 import axios from 'axios';
 import { FaPlay } from 'react-icons/fa';
 import { FiDownloadCloud, FiUploadCloud } from 'react-icons/fi';
+import { BsClipboard } from 'react-icons/bs';
 import 'ace-builds/src-min-noconflict/ext-language_tools';
 import 'ace-builds/webpack-resolver';
 import {
@@ -20,7 +22,7 @@ import {
   getExtensionByLangId,
 } from './editorData';
 import { judgeUrl } from '../../api/apiInfo';
-import { delay } from '../../utils';
+import { copyToClipboard, delay } from '../../utils';
 import { Resizable } from 're-resizable';
 import { Ace } from 'ace-builds';
 
@@ -64,6 +66,7 @@ import TerminalReducer, {
   initialTerminalState,
 } from '../../store/reducers/TerminalReducer';
 import { isNotBlank } from '../../utils/stringUtils';
+import CopyToClipboard from 'react-copy-to-clipboard';
 
 // Object.keys(languageDataWithKeys).forEach(key => {
 //   const languageData = languageDataWithKeys[key];
@@ -94,6 +97,7 @@ const CodeEditor = ({ userName }: CodeEditorProps) => {
   const [codeError, setCodeError] = useState('');
   const [isChatOpen, setIsChatOpen] = useState(true);
   const editorRef = useRef<any>(null);
+  const toast = useToast();
 
   const [stdoutOutput, dispatchStdoutOutput] = useReducer(
     TerminalReducer,
@@ -291,7 +295,36 @@ const CodeEditor = ({ userName }: CodeEditorProps) => {
   };
 
   const onUploadClick = () => {
-    console.log('object');
+    const element = document.querySelector('#upload_code') as HTMLElement;
+    element.click();
+  };
+
+  const onFileChange = (e: any) => {
+    const file = e.target.files[0];
+
+    if (file) {
+      const reader = new FileReader();
+
+      reader.onload = (e: any) => {
+        setCodeValue(e.target.result);
+      };
+
+      reader.onerror = (e: any) => {
+        console.error('Error while reading the file', e);
+      };
+
+      reader.readAsText(file, 'UTF-8');
+    }
+  };
+
+  const onCodeCopyClick = () => {
+    copyToClipboard(codeValue);
+    toast({
+      title: `Copied source code`,
+      status: 'success',
+      isClosable: true,
+      position: 'top',
+    });
   };
 
   const CodeEditorHeader = (props: any) => {
@@ -365,15 +398,49 @@ const CodeEditor = ({ userName }: CodeEditorProps) => {
           ))}
         </Select>
         <Flex className='code-controls' color='white' ml='auto'>
+          <Tooltip hasArrow label='Upload'>
+            <Button colorScheme='blue' size='sm' onClick={onUploadClick}>
+              <input
+                type='file'
+                id='upload_code'
+                hidden
+                onChange={onFileChange}
+              />
+              <FiUploadCloud fontSize='20px' />
+            </Button>
+          </Tooltip>
           <Tooltip hasArrow label='Download'>
-            <Button colorScheme='blue' size='sm' onClick={onDownloadClick}>
+            <Button
+              colorScheme='blue'
+              size='sm'
+              onClick={onDownloadClick}
+              ml={2}
+            >
               <FiDownloadCloud fontSize='20px' />
             </Button>
           </Tooltip>
-          <Tooltip hasArrow label='Upload'>
-            <Button colorScheme='blue' size='sm' onClick={onUploadClick} ml={2}>
-              <FiUploadCloud fontSize='20px' />
+          <Tooltip hasArrow label='Copy Code'>
+            {/* <CopyToClipboard
+              text={codeValue + ''}
+              onCopy={(link, _) => {
+                console.log(link);
+                toast({
+                  title: `Copied source code`,
+                  status: 'success',
+                  isClosable: true,
+                  position: 'top',
+                });
+              }}
+            > */}
+            <Button
+              colorScheme='blue'
+              size='sm'
+              ml={2}
+              onClick={onCodeCopyClick}
+            >
+              <BsClipboard fontSize='20px' />
             </Button>
+            {/* </CopyToClipboard> */}
           </Tooltip>
         </Flex>
       </Flex>
