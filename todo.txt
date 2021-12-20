@@ -14,7 +14,6 @@ Top Priority
     - Try minimizing the window and reproduce this issue.
 * Add a slick landing page with animations, illustrations and memes :P 
 * terminal scroll to bottom when new text gets added.
-* Upload code feature
 * Zen mode(full screen feature)
 * share code feature(use dpaste or some other service, carbonnow.sh etc)
 
