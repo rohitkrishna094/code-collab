@@ -469,7 +469,11 @@ const CodeEditor = ({ userName }: CodeEditorProps) => {
             width: '70%',
             height: '100%',
           }}
-          style={{ borderRight: '10px solid #202020' }}
+          style={{
+            borderRight: '10px solid #202020',
+            display: 'flex',
+            flexDirection: 'column',
+          }}
           maxWidth='70%'
           minWidth='40%'
           // size={{
@@ -491,7 +495,7 @@ const CodeEditor = ({ userName }: CodeEditorProps) => {
           <Flex
             direction='column'
             position='relative'
-            height='100%'
+            flexGrow={1}
             width='100%'
             bg='cornsilk'
           >

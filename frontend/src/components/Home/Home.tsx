@@ -170,25 +170,13 @@ const JoinButtonModal = (props: any) => {
   );
 };
 
-const Home = (props: any) => {
+const IntroSection = (props: any) => {
   return (
-    // <Flex
-    //   height='100vh'
-    //   width='100vw'
-    //   alignItems='center'
-    //   justifyContent='center'
-    //   bg='#272822'
-    //   direction='column'
-    // >
-    //   <LaunchButtonModal />
-    //   <JoinButtonModal />
-    // </Flex>
     <Flex
       alignItems='center'
       justifyContent='space-evenly'
       padding={200}
       bg='#202020'
-      // bg='red'
       color='white'
     >
       <Flex
@@ -197,7 +185,6 @@ const Home = (props: any) => {
         alignItems='center'
         justifyContent='center'
         padding={10}
-        // bg='blue'
       >
         <Heading
           fontSize={['32px', '48px', '48px']}
@@ -245,6 +232,58 @@ const Home = (props: any) => {
       </Flex>
       <Flex className='animation'>animation goes here</Flex>
     </Flex>
+  );
+};
+
+const LiveEditorDemoSection = (props: any) => {
+  return (
+    <>
+      <h1>live editor</h1>
+    </>
+  );
+};
+
+const ChatDemoSection = (props: any) => {
+  return (
+    <>
+      <h1>Chat Demo Section</h1>
+    </>
+  );
+};
+
+const EmojiPickerDemoSection = (props: any) => {
+  return (
+    <>
+      <h1>Emoji Picker Demo Section</h1>
+    </>
+  );
+};
+
+const MultiLangSupportSection = (props: any) => {
+  return (
+    <>
+      <h1>Multi Lang Support Section</h1>
+    </>
+  );
+};
+
+const DrawSupportDemoSection = (props: any) => {
+  return (
+    <>
+      <h1>Draw Support Demo Section</h1>
+    </>
+  );
+};
+const Home = (props: any) => {
+  return (
+    <>
+      <IntroSection />
+      <LiveEditorDemoSection />
+      <ChatDemoSection />
+      <EmojiPickerDemoSection />
+      <MultiLangSupportSection />
+      <DrawSupportDemoSection />
+    </>
   );
 };
 
