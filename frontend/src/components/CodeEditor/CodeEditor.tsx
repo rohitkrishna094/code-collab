@@ -199,10 +199,10 @@ const CodeEditor = ({ userName }: CodeEditorProps) => {
       });
       console.log('compile: ', response);
       return response.data.token;
-    } catch (err) {
+    } catch (err: any) {
       console.log('Error while submitting', err);
       setIsCompiling(false);
-      setCodeError(err);
+      setCodeError(err.message);
       setIsError(true);
     }
   };
